@@ -559,7 +559,7 @@ const salesPersonId = token ? jwtDecodes?.salesPersonId : null;
 
   const handleScroll = () => {
     const offset = window.scrollY;
-    if (offset > 100) { // Change this value based on when you want it to be sticky
+    if (offset > 100) { 
       setSticky(true);
     } else {
       setSticky(false);

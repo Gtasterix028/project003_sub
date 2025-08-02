@@ -653,12 +653,12 @@ useEffect(() => {
         </Typography>
       </Link>
 
-      <Link to={"/premiumcars"}>
+      <Link to={"/premiumcarlist"}>
         <Typography
           as="li"
           variant="small"
           color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/premiumcars"
+          className={`p-3 rounded-md font-normal ${window.location.pathname === "/premiumcarlist"
               ? "bg-[#5e67c7] text-white"
               : ""
             } hover:bg-indigo-400 `}
@@ -739,7 +739,7 @@ useEffect(() => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6 lg:gap-10 text-white">
-          {[{ label: "Home", path: "/" }, { label: "Premium Cars", path: "#" }, { label: "Buy Car", path: "/carlist" }].map(({ label, path }) => {
+          {[{ label: "Home", path: "/" }, { label: "Premium Cars", path: "/premiumcarlist" }, { label: "Buy Car", path: "/carlist" }].map(({ label, path }) => {
             const isActive = activeTab === label;
             return (
               <div
@@ -826,7 +826,7 @@ useEffect(() => {
           <Link to="/" onClick={() => setOpenNav(false)} className="hover:text-gray-300">
             Home
           </Link>
-          <Link to="/#" onClick={() => setOpenNav(false)} className="hover:text-gray-300">
+          <Link to="/premiumcarlist" onClick={() => setOpenNav(false)} className="hover:text-gray-300">
             Premium Cars
           </Link>
           <Link to="/carlist" onClick={() => setOpenNav(false)} className="hover:text-gray-300">
