@@ -136,7 +136,7 @@ console.log(biddingdata)
   if (!data) {
     return (
       <div>
-        <div className="flex justify-center  mt-14">
+        <div className="flex justify-center">
           <img className="w-40" src={emptyfolder} alt="no data" />
         </div>
         <p className="flex justify-center text-2xl md:text-3xl font-semibold">

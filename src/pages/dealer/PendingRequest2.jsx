@@ -3,7 +3,7 @@ const PendingRequest2 = () => {
     <>
       <div className="p-10 bg-blue-gray-100">
         <div className=" text-2xl font-bold ">Stock Report Card</div>
-        <div className="flex justify-around mt-10">
+        <div className="flex justify-around">
           <div className="flex flex-col items-center">
             <div className="text-5xl text-orange-500 font-[sourceSans]">5</div>
             <div className="text-xl font-[sourceSans]">Active</div>
