@@ -116,7 +116,7 @@ const   AdminInspectorEdit = () => {
             <p>Edit</p>
             </div>
     </Typography>
-    <div className="mx-auto container flex justify-center md:w-[50%] w-fit mt-10">
+          <div className="mx-auto container flex justify-center md:w-[50%] w-fit">
       <form className="w-full border border-gray-500 px-2 py-2 rounded-md mt-2 mb-2" onSubmit={onSubmitHandler}>
         <div className="mt-3">
           <p className="text-3xl font-semibold">Edit Inspector Details</p>

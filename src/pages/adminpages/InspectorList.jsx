@@ -168,7 +168,7 @@ export default function InspectorList() {
            <div className="flex shrink-0 gap-2 sm:flex-row justify-end mr-5 mt-5">
             <AddInspectorForm />
           </div>
-           <div className="flex justify-center mt-10">
+           <div className="flex justify-center">
            <img
           className="w-40"
           src={emptyImage}

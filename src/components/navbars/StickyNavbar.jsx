@@ -24,17 +24,18 @@ import { Link, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import Profile from "../Profile/Profile";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo1.png";
 import logo2 from "../../assets/ui/ucdap.png"
 import logo3 from "../../assets/ui/UCDAP_white.png"
 import underline from "../../assets/Home_undrline.png";
 
 
 import { jwtDecode } from "jwt-decode";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";  
 import cartechlogo2 from "/cars/cartechlogo2.png";
 ///////////////
 export function StickyNavbar() {
+  const location = useLocation();
 
 // New code for the home page start here 
   const [showNavbar, setShowNavbar] = useState(true);
@@ -54,6 +55,23 @@ useEffect(() => {
   window.addEventListener("scroll", handleScroll);
   return () => window.removeEventListener("scroll", handleScroll);
 }, [lastScrollY]);
+
+// Set active tab based on current route
+useEffect(() => {
+  const path = location.pathname;
+  if (path === "/") {
+    setActiveTab("Home");
+  } else if (path === "/premiumcarlist") {
+    setActiveTab("Premium Cars");
+  } else if (path === "/carlist") {
+    setActiveTab("Buy Car");
+  } else if (path.includes("/admin") || path.includes("/dealer") || path.includes("/inspector") || path.includes("/sales") || path.includes("/user")) {
+    setActiveTab("Dashboard");
+  } else {
+    // Clear active tab for other pages like login/register
+    setActiveTab("");
+  }
+}, [location.pathname]);
 
 // New code for the home page end here 
 
@@ -80,84 +98,92 @@ useEffect(() => {
   const UserId = token ? jwtDecodes?.userId : null;
   const userProfileId = token ? jwtDecodes?.userProfileId : null;
 
-  const location = useLocation();
-
   const handleMenuItemClick = () => {
     setOpenNav(false);
+  };
+
+  // Function to get dashboard path based on user role
+  const getDashboardPath = () => {
+    if (!userRole) return "/";
+    
+    switch (userRole) {
+      case "ADMIN":
+        return "/admin";
+      case "DEALER":
+        return `/dealer/${jwtDecodes?.dealerId}`;
+      case "USER":
+        return `/user/${jwtDecodes?.userId}`;
+      case "INSPECTOR":
+        return "/inspector/car";
+      case "SALESPERSON":
+        return "/sales/salesDealers";
+      default:
+        return "/";
+    }
   };
 
   const active = location.pathname === `/dealer/${jwtDecodes?.dealerId}`;
   function NavListMenu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const navListMenuItems = [
-      {
-        title: "Bidding Car",
-        link:
-          userRole === "DEALER"
-            ? "/dealer/biddingcar"
-            : userRole === "ADMIN"
-              ? "/admin/biddingcar"
-              : userRole === "SALESPERSON"
-                ? "/sales/biddingcar"
-                : null,
-      },
-    ];
+    const navListMenuItems = [];
+
+    // ADMIN Role Dashboard Items
     if (userRole === "ADMIN") {
-      navListMenuItems.unshift(
-        {
-          title: "Dashboard",
-
-          link: `/`,
-        },
-        {
-          title: "Car Models",
-          link: "/carlistmodel",
-        },
-
-        {
-          title: "Car Colors",
-          link: "/admin/addcolor",
-        },
-
-        // {
-        //   title: "User Request",
-        //   link: "/Admin/UserRequest",
-        // },
-        {
-          title: "Premium Car List",
-          link: "/carlistadmin",
-        },
-        {
-          title: "B2B Cars",
-          link: "/adminB2B",
-        }
+      navListMenuItems.push(
+        { title: "Dashboard", link: `/` },
+        { title: "Dealers", link: "/admin" },
+        { title: "Inspectors", link: "/inspector" },
+        { title: "Seller", link: "/admin/salesuser" },
+        { title: "Car Models", link: "/carlistmodel" },
+        { title: "Car Colors", link: "/admin/addcolor" },
+        { title: "Premium Car List", link: "/carlistadmin" },
+        { title: "B2B Cars", link: "/adminB2B" },
+        { title: "Bidding Car", link: "/admin/biddingcar" }
       );
     }
 
+    // DEALER Role Dashboard Items
     if (userRole === "DEALER") {
-      navListMenuItems.unshift(
-        {
-          title: "Cars",
-          link: `/dealer/${jwtDecodes?.dealerId}`,
-        },
-        {
-          title: "Premium Cars",
-          link: `/dealer/premium/${jwtDecodes?.dealerId}`,
-        },
-        {
-          title: "Winner Section",
-          link: `/dealer/winnersection`,
-        },
+      navListMenuItems.push(
+        { title: "Dashboard", link: `/dealer/${jwtDecodes?.dealerId}` },
+        { title: "Premium Cars", link: `/dealer/premium/${jwtDecodes?.dealerId}` },
+        { title: "B2B", link: `/dealer/B2B` },
+        { title: "Live Cars", link: "/dealer/live/cars" },
+        { title: "Winner Section", link: `/dealer/winnersection` },
+        { title: "Bidding Car", link: "/dealer/biddingcar" },
+        { title: "Pending Request", link: `/dealer/${jwtDecodes?.dealerId}/allpending` },
+        { title: "B2B Pending Booking", link: `/dealer/${jwtDecodes?.dealerId}/b2bpending` },
+        { title: "Confirm Booking", link: `/dealer/${jwtDecodes?.dealerId}/booking/confirm` },
+        { title: "B2B Confirm Booking", link: `/dealer/${jwtDecodes?.dealerId}/b2b/confirm` }
       );
     }
-    if (userRole === "SALESPERSON") {
-      navListMenuItems.unshift(
-        {
-          title: "B2B",
-          link: `/Seller/b2b/pending`,
-        },
 
+    // USER Role Dashboard Items
+    if (userRole === "USER") {
+      navListMenuItems.push(
+        { title: "Dashboard", link: `/user/${jwtDecodes?.userId}` },
+        { title: "Sell Car", link: `/sellcarlist` },
+        { title: "All Request", link: `/pendinrequest/${jwtDecodes?.userId}` },
+        { title: "Favourite", link: `/user/${jwtDecodes?.userId}/favorite` }
+      );
+    }
+
+    // INSPECTOR Role Dashboard Items
+    if (userRole === "INSPECTOR") {
+      navListMenuItems.push(
+        { title: "Dashboard", link: `/inspector/car` },
+        { title: "User Cars", link: `/inspector/user/cars` }
+      );
+    }
+
+    // SALESPERSON Role Dashboard Items
+    if (userRole === "SALESPERSON") {
+      navListMenuItems.push(
+        { title: "Dashboard", link: "/sales/salesDealers" },
+        { title: "User Cars", link: `/seller/request/active` },
+        { title: "B2B", link: `/Seller/b2b/pending` },
+        { title: "Bidding Car", link: "/sales/biddingcar" }
       );
     }
     const renderItems = navListMenuItems.map(({ title, link }, key) => (
@@ -207,422 +233,24 @@ useEffect(() => {
             </Typography>
           </MenuHandler>
           <MenuList className="hidden max-w-screen-xl rounded-xl lg:block bg-[#626deb] border-none">
-            <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-2 outline-none outline-0 min-w-[350px]">
               {renderItems}
             </ul>
           </MenuList>
         </Menu>
         <div className="block lg:hidden">
-          <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-        </div>
-      </React.Fragment>
-    );
-  }
-  function PendingListMenu() {
-    const [isMenuOpen1, setIsMenuOpen1] = useState(false);
-    const [isMobileMenuOpen1, setIsMobileMenuOpen1] = useState(false);
-    const navListMenuItems = [
-
-    ];
-
-
-    if (userRole === "DEALER") {
-      navListMenuItems.unshift(
-        {
-          title: "Pending Request",
-          link: `/dealer/${jwtDecodes?.dealerId}/allpending`,
-        },
-        {
-          title: "B2B Pending Booking",
-          link: `/dealer/${jwtDecodes?.dealerId}/b2bpending`,
-        }
-      );
-    }
-    const renderItems1 = navListMenuItems.map(({ title, link }, key) => (
-      <Link to={link} key={key}>
-        <MenuItem className="flex items-center gap-3 rounded-lg hover:bg-[#2d3483]">
-          <div>
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="flex items-center text-sm font-normal text-white"
-            >
-              {title}
-            </Typography>
-          </div>
-        </MenuItem>
-      </Link>
-    ));
-
-    return (
-      <React.Fragment>
-        <Menu
-          open={isMenuOpen1}
-          handler={setIsMenuOpen1}
-          offset={{ mainAxis: 20 }}
-          placement="bottom"
-          allowHover={true}
-        >
-          <MenuHandler>
-            <Typography as="div" variant="small" className="font-medium">
-              <ListItem
-                className={`flex items-center gap-2 p-3 font-medium text-white hover:bg-indigo-400`}
-                selected={isMenuOpen1 || isMobileMenuOpen1}
-                onClick={() => setIsMobileMenuOpen1((cur) => !cur)}
-              >
-                Pending Booking
-                <ChevronDownIcon
-                  strokeWidth={2.5}
-                  className={`hidden h-3 w-3 transition-transform lg:block ${isMenuOpen1 ? "rotate-180" : ""
-                    }`}
-                />
-                <ChevronDownIcon
-                  strokeWidth={2.5}
-                  className={`block h-3 w-3 transition-transform lg:hidden ${isMobileMenuOpen1 ? "rotate-180" : ""
-                    }`}
-                />
-              </ListItem>
-            </Typography>
-          </MenuHandler>
-          <MenuList className="hidden max-w-screen-xl rounded-xl lg:block bg-[#626deb] border-none">
-            <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
-              {renderItems1}
+          <Collapse open={isMobileMenuOpen}>
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-2 outline-none outline-0 min-w-[250px]">
+              {renderItems}
             </ul>
-          </MenuList>
-        </Menu>
-        <div className="block lg:hidden">
-          <Collapse open={isMobileMenuOpen1}>{renderItems1}</Collapse>
+          </Collapse>
         </div>
       </React.Fragment>
     );
   }
+  // Removed PendingListMenu and ConfermListMenu functions - consolidated into NavListMenu
 
-  function ConfermListMenu() {
-    const [isMenuOpen2, setIsMenuOpen2] = useState(false);
-    const [isMobileMenuOpen2, setIsMobileMenuOpen2] = useState(false);
-    const navListMenuItems = [];
-
-    if (userRole === "DEALER") {
-      navListMenuItems.unshift(
-        {
-          title: "Confirm Booking",
-          link: `/dealer/${jwtDecodes?.dealerId}/booking/confirm`,
-        },
-        {
-          title: "B2B Confirm Booking ",
-          link: `/dealer/${jwtDecodes?.dealerId}/b2b/confirm`,
-        }
-      );
-    }
-    const renderItems2 = navListMenuItems.map(({ title, link }, key) => (
-      <Link to={link} key={key}>
-        <MenuItem className="flex items-center gap-3 rounded-lg hover:bg-[#2d3483]">
-          <div>
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="flex items-center text-sm font-normal text-white"
-            >
-              {title}
-            </Typography>
-          </div>
-        </MenuItem>
-      </Link>
-    ));
-
-    return (
-      <React.Fragment>
-        <Menu
-          open={isMenuOpen2}
-          handler={setIsMenuOpen2}
-          offset={{ mainAxis: 20 }}
-          placement="bottom"
-          allowHover={true}
-        >
-          <MenuHandler>
-            <Typography as="div" variant="small" className="font-medium">
-              <ListItem
-                className={`flex items-center gap-2 p-3 font-medium text-white hover:bg-indigo-400`}
-                selected={isMenuOpen2 || isMobileMenuOpen2}
-                onClick={() => setIsMobileMenuOpen2((cur) => !cur)}
-              >
-                Confirm Booking
-                <ChevronDownIcon
-                  strokeWidth={2.5}
-                  className={`hidden h-3 w-3 transition-transform lg:block ${isMenuOpen2 ? "rotate-180" : ""
-                    }`}
-                />
-                <ChevronDownIcon
-                  strokeWidth={2.5}
-                  className={`block h-3 w-3 transition-transform lg:hidden ${isMobileMenuOpen2 ? "rotate-180" : ""
-                    }`}
-                />
-              </ListItem>
-            </Typography>
-          </MenuHandler>
-          <MenuList className="hidden max-w-screen-xl rounded-xl lg:block bg-[#626deb] border-none">
-            <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
-              {renderItems2}
-            </ul>
-          </MenuList>
-        </Menu>
-        <div className="block lg:hidden">
-          <Collapse open={isMobileMenuOpen2}>{renderItems2}</Collapse>
-        </div>
-      </React.Fragment>
-    );
-  }
-
-  const adminDashboard = userRole?.includes("ADMIN") ? (
-    <>
-
-
-      <Link to={"/admin"}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/admin"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Dealers
-        </Typography>
-      </Link>
-      <NavListMenu />
-
-      <Link to={"/inspector"}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/inspector"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Inspectors
-        </Typography>
-      </Link>
-      <Link to={"/admin/salesuser"}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/admin/salesuser"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Seller
-        </Typography>
-      </Link>
-
-      {/* <NotificationDialog /> */}
-    </>
-  ) : null;
-
-  const inspectorDashboard = userRole?.includes("INSPECTOR") ? (
-    <>
-      <Link to={`/inspector/car`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === `/inspector/car`
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Cars
-        </Typography>
-      </Link>
-      <Link to={`/inspector/user/cars`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === `/inspector/user/cars`
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          User Cars
-        </Typography>
-      </Link>
-
-      {/* <NotificationDialog /> */}
-    </>
-  ) : null;
-
-  const salePersonDashboard = userRole?.includes("SALESPERSON") ? (
-    <>
-      <Link to={"/sales/salesDealers"}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/sales/salesDealers"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Dealers
-        </Typography>
-      </Link>
-      <Link to={`/seller/request/active`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === `/Seller/UserRequest`
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          User Cars
-        </Typography>
-      </Link>
-      <NavListMenu />
-
-      {/* <NotificationDialog /> */}
-    </>
-  ) : null;
-
-  const dealerDashboard = userRole?.includes("DEALER") ? (
-    <>
-      <Link to={"/carlist"}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/carlist"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Buy Car
-        </Typography>
-      </Link>
-
-      <Link to={`/dealer/B2B`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname ===
-              `/dealer/B2B`
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          B2B
-        </Typography>
-      </Link>
-
-      <Link to={"/dealer/live/cars"}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/dealer/live/cars"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-          onClick={handleMenuItemClick}
-        >
-          Live Cars
-        </Typography>
-      </Link>
-
-      <NavListMenu />
-
-      <PendingListMenu />
-
-      <ConfermListMenu />
-
-      {/* <NotificationDialog /> */}
-    </>
-  ) : null;
-
-  const userDashboard = userRole?.includes("USER") ? (
-    <>
-      <Link to={`/sellcarlist`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/sellcarlist"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-        >
-          Sell Car
-        </Typography>
-      </Link>
-
-      <Link to={`/pendinrequest/${jwtDecodes?.userId}`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname === "/pendinrequest"
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-        >
-          All Request
-        </Typography>
-      </Link>
-
-      {/* <Link to={`/user/booking/${jwtDecodes?.userId}`}>
-
-        <Typography
-
-          as="li"
-
-          variant="small"
-
-          color="blue-gray"
-
-          className={`p-3 rounded-md font-normal ${window.location.pathname === `/user/booking/${jwtDecodes?.userId}` ? "bg-indigo-200 text-white" : ""}`}
-
-        >
-
-          Confirm Booking
-
-        </Typography>
-
-      </Link> */}
-
-      <Link to={`/user/${jwtDecodes?.userId}/favorite`}>
-        <Typography
-          as="li"
-          variant="small"
-          color="white"
-          className={`p-3 rounded-md font-normal ${window.location.pathname ===
-              `/dealer/${jwtDecodes?.userId}/booking/confirm`
-              ? "bg-[#5e67c7] text-white"
-              : ""
-            }hover:bg-indigo-400`}
-        >
-          Favourite
-        </Typography>
-      </Link>
-
-      {/* <NotificationDialog /> */}
-    </>
-  ) : null;
+  // Consolidated Dashboard Dropdown - All role-specific items are now in NavListMenu
 
   React.useEffect(() => {
     window.addEventListener(
@@ -668,46 +296,23 @@ useEffect(() => {
         </Typography>
       </Link>
 
-      {userRole == "DEALER" ||
-        userRole == "INSPECTOR" ||
-        userRole == "SALESPERSON" ? null : (
-        <>
-          <Link to={"/carlist"}>
-            <Typography
-              as="li"
-              variant="small"
-              color="white"
-              className={`p-3 rounded-md font-normal ${window.location.pathname === "/carlist"
-                  ? "bg-[#5e67c7] text-white"
-                  : ""
-                }hover:bg-indigo-400 `}
-              onClick={handleMenuItemClick}
-            >
-              Buy Car
-            </Typography>
-          </Link>
-          {/* <Link to={"/buypremiumcars"}>
-            <Typography
-              as="li"
-              variant="small"
-              color="white"
-              className={`p-3 rounded-md font-normal ${
-                window.location.pathname === "/dealer/live/cars"
-                  ? "bg-[#5e67c7] text-white"
-                  : ""
-              }hover:bg-indigo-400`}
-              onClick={handleMenuItemClick}
-            >
-              Buy Premium Car
-            </Typography>
-          </Link> */}
-        </>
-      )}
-      {adminDashboard}
-      {dealerDashboard}
-      {userDashboard}
-      {inspectorDashboard}
-      {salePersonDashboard}
+      <Link to={"/carlist"}>
+        <Typography
+          as="li"
+          variant="small"
+          color="white"
+          className={`p-3 rounded-md font-normal ${window.location.pathname === "/carlist"
+              ? "bg-[#5e67c7] text-white"
+              : ""
+            }hover:bg-indigo-400 `}
+          onClick={handleMenuItemClick}
+        >
+          Buy Car
+        </Typography>
+      </Link>
+
+      {/* Consolidated Dashboard Dropdown for Logged In Users */}
+      {token && <NavListMenu />}
     </ul>
   );
 
@@ -721,33 +326,42 @@ useEffect(() => {
           : "bg-black/90 backdrop-blur-md"
       } ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
     >
-      <div className="flex items-center justify-between px-2 sm:px-4 lg:px-8 py-2 sm:py-4 md:py-5 lg:py-3">
+      <div className="flex items-center justify-between px-1 sm:px-3 lg:px-8 py-2 sm:py-4 md:py-4 lg:py-3">
         {/* Logo and Brand */}
         <div className="flex flex-col items-center justify-start pl-0 ml-0 gap-0 ">
-          <div className="flex items-center gap-5">
-            <img src={logo} alt="Logo 1" className="w-12 h-12 object-contain" />
+          <div className="flex items-center gap-">
+            <img src={logo} alt="Logo 1" className="w-20 h-18 object-contain" />
             <img 
               src={isHomePage ? logo3 : logo3} 
               alt={isHomePage ? "Logo 2" : "Logo 3"} 
               className="w-16 h-14 object-contain" 
             />
           </div>
-          <div className="text-white font-semibold text-xs sm:text-sm text-center leading-tight">
+          {/* <div className="text-white font-semibold  text-xs  md:hidden sm:text-sm text-center leading-tight">
             CARYANAM INDIA
-          </div>
+          </div> */}
         </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6 lg:gap-10 text-white">
-          {[{ label: "Home", path: "/" }, { label: "Premium Cars", path: "/premiumcarlist" }, { label: "Buy Car", path: "/carlist" }].map(({ label, path }) => {
+          {[
+            { label: "Home", path: "/" }, 
+            { label: "Premium Cars", path: "/premiumcarlist" }, 
+            { label: "Buy Car", path: "/carlist" }
+          ].map(({ label, path }) => {
             const isActive = activeTab === label;
             return (
               <div
                 key={label}
                 className="relative text-base md:text-lg lg:text-xl font-light font-['Roboto'] cursor-pointer flex flex-col items-center"
-                onClick={() => setActiveTab(label)}
               >
-                <Link to={path}>{label}</Link>
+                <Link 
+                  to={path} 
+                  onClick={() => setActiveTab(label)}
+                  className="hover:text-gray-300 transition-colors"
+                >
+                  {label}
+                </Link>
                 {/* Underline only on md and up */}
                 {isActive && (
                   <img
@@ -759,12 +373,13 @@ useEffect(() => {
               </div>
             );
           })}
-          {/* Insert your role-based nav items here */}
-          {adminDashboard}
-          {dealerDashboard}
-          {userDashboard}
-          {inspectorDashboard}
-          {salePersonDashboard}
+          
+          {/* Dashboard Dropdown for Logged In Users */}
+          {token && (
+            <div className="relative text-base md:text-lg lg:text-xl font-light font-['Roboto'] cursor-pointer flex flex-col items-center">
+              <NavListMenu />
+            </div>
+          )}
         </div>
 
         {/* Login/Register/Profile for md and above */}
@@ -832,7 +447,11 @@ useEffect(() => {
           <Link to="/carlist" onClick={() => setOpenNav(false)} className="hover:text-gray-300">
             Buy Car
           </Link>
-          {/* Insert your role-based nav items for mobile here if needed */}
+          {token && (
+            <div className="space-y-2">
+              <NavListMenu />
+            </div>
+          )}
           <div
             onClick={() => setOpenNav(false)}
             className="mt-6 inline-block bg-white text-[#131C24] text-center py-2 px-4 rounded-full shadow hover:scale-105 transition duration-300"

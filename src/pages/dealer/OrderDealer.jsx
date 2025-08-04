@@ -75,7 +75,7 @@ const OrderDealer = () => {
     );}
   if (!data) {
     return <div>
-      <div className="flex justify-center  mt-14">
+              <div className="flex justify-center">
       <img
           className="w-40"
           src={emptyfolder}

@@ -133,7 +133,7 @@ const AdminDealerEdit = () => {
 
             </div>
     </Typography>
-    <div className="mx-auto container px-4 sm:px-6 lg:px-8 flex justify-center w-full md:w-[50%] mt-10">
+          <div className="mx-auto container px-4 sm:px-6 lg:px-8 flex justify-center w-full md:w-[50%]">
     
       <form className="w-full border border-gray-500 px-2 py-2 rounded-md mt-2 mb-2" onSubmit={onSubmitHandler}>
         <div className="mt-3">

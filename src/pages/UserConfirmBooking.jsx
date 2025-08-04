@@ -21,10 +21,10 @@ const UserConfirmBooking = () => {
     );
   }
   return ( 
-    <div className="space-y-4 mt-12">
+    <div className="space-y-4">
     
       <div className="w-full flex justify-center">
-        <CardUi className=" mt-12 ">
+        <CardUi className="">
           <div className="min-w-[20rem] flex gap-12 justify-center">
           <div>
             <p className="text-lg ">date:<span className="font-semibold">{data?.bookingDto?.date}</span> </p>

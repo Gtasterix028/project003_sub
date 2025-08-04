@@ -34,7 +34,6 @@ const Home = () => {
       {/* <AccordionCustom /> */}
       {/* <ContactUs/> */}
 
-
       <AboutUs />
       <StartSection />
       <SearchByBody />
