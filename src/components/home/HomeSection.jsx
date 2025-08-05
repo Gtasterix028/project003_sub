@@ -19,7 +19,7 @@ const HomeSection = () => {
       >
         {/* Title */}
         <h1 className="mt-22 lg:mt-4 font-semibold text-white font-semibold max-w-[90%] sm:max-w-[80%] lg:max-w-[70%] leading-snug text-2xl sm:text-2xl md:text-3xl lg:text-4xl mb-4">
-          Welcome to Caryanam — Explore <br className="hidden sm:block" /> Our Latest Deals!
+          Welcome to Caryanamindia — Explore <br className="hidden sm:block" /> Our Latest Deals!
         </h1>
 
         {/* Paragraph */}
