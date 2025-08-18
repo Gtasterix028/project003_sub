@@ -254,6 +254,8 @@
 
 import  { useRef } from "react";
 import Logo from "../assets/logo.png"
+import LoadingScreen from "./LoadingScreen";
+
 
 
 const Footer = () => {
@@ -422,7 +424,7 @@ const Footer = () => {
             />
             <button
               className="w-full h-12 rounded-2xl bg-[#FF7101] text-white font-medium hover:bg-[#E56700] transition-colors duration-200 flex items-center justify-center text-sm"
-              style={{ maxWidth: "350px" }}
+              style={{ maxWidth: "350px" }} onClick={LoadingScreen}
             >
               Send
             </button>
