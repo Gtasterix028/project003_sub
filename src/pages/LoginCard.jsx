@@ -462,7 +462,7 @@ const LoginCard = () => {
             >
               <Link to="/signup" style={{ textDecoration: "none" }}>
                 <Typography variant="body2" style={{ color: "white" }}>
-                  Dont have an account? Sign Up
+                  Dont have an account? Sign Up.
                 </Typography>
               </Link>
             </CardActions>
