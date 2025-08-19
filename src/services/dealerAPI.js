@@ -75,21 +75,23 @@ export const dealerAPI = apiSlice.injectEndpoints({
       providesTags: ["DEALERBOOKING"],
     }),
 
-    addCarImages: builder.mutation({
-      query: ({ formData, document, firstCarId, UserID }) => ({
-        url: `/uploadFile/add?documentType=${document}&userId=${UserID}&carId=${firstCarId}`,
-        // transerResponse: console.log(
-        //   "APi response",
-        //   formData,
-        //   firstCarId,
-        //   document,
-        //   UserID
-        // ),
-        method: "POST",
-        body: formData,
-      }),
-      invalidatesTags: ["Dealer"],
-    }),
+addCarImages: builder.mutation({
+  query: ({ file, document, premiumCarId, userId }) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("documentType", document);
+    formData.append("premiumCarId", premiumCarId);
+    formData.append("userId", userId); // change to dealerId if needed
+
+    return {
+      url: `/PremiumCarUploadFile/add`,
+      method: "POST",
+      body: formData,
+    };
+  },
+  invalidatesTags: ["Dealer"],
+}),
+
 
     dealerStatus: builder.mutation({
       query: ({ dealer_id, status }) => ({
