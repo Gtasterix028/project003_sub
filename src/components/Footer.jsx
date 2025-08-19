@@ -144,9 +144,6 @@
 // //   );
 // // }
 
-
-
-
 // //Shubham G
 // import { Box, Grid, Typography, Link, IconButton ,Divider} from '@mui/material';
 // import TwitterIcon from '@mui/icons-material/Twitter';
@@ -212,8 +209,8 @@
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={3}>
 
-// <Box 
-//   display="flex" 
+// <Box
+//   display="flex"
 //   justifyContent="center" // Center the logo horizontally
 //   // alignItems="center" // Center the logo vertically
 //   sx={{ mt: 2 }} // Add some margin on top if needed
@@ -236,8 +233,7 @@
 //           <IconButton href="#" color="inherit" aria-label="ios" sx={{ fontSize: 40 }}>
 //             <AppleIcon sx={{ fontSize: 40 }} />
 //           </IconButton>
-        
-         
+
 //         </Grid>
 //       </Grid>
 //       <Box sx ={{ textAlign: 'center', mt: 4 }}>
@@ -251,10 +247,8 @@
 
 // export default Footer;
 
-
-import  { useRef } from "react";
-import Logo from "../assets/logo.png"
-
+import { useRef } from "react";
+import Logo from "../assets/logo.png";
 
 const Footer = () => {
   const logoRef = useRef(null);

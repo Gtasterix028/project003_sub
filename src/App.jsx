@@ -3,7 +3,7 @@ import { Routes, Route, Router } from "react-router-dom";
 import { FavoriteProvider } from "./ui/FavoriteContext";
 import Home from "./pages/Home";
 import AppLayout from "./ui/AppLayout";
-import LoginCard  from "./pages/LoginCard";
+import LoginCard from "./pages/LoginCard";
 import { SimpleRegistrationForm } from "./pages/SimpleRegistrationForm";
 
 import BuyCar from "./pages/BuyCar";
@@ -114,347 +114,394 @@ import B2BPendingRequest from "./pages/dealer/B2BPendingRequest";
 import OrderDealerB2B from "./pages/dealer/OrderDealerB2B";
 import AdminB2BList from "./pages/b2b/AdminB2BList";
 import ScrollToTopButton from "./ui/ScrollToTopButton";
+import React, { useState, useEffect, useRef } from "react";
+import LoadingScreen from "./components/LoadingScreen";
+
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const firstLoad = useRef(true); // Tracks if this is the first app mount
+
+  useEffect(() => {
+    if (firstLoad.current) {
+      // Run only on very first load
+      setTimeout(() => {
+        setLoading(false);
+      }, 4000); // show loader for 4 seconds
+
+      firstLoad.current = false; // Mark as loaded
+    } else {
+      // Skip loader on route changes
+      setLoading(false);
+    }
+  }, []);
+
+  // if (loading) {
+  //   return <LoadingScreen />;
+  // }
   return (
     <>
-      <WebSocketConnection />
-      <Routes>
-        <Route path="signin" element={<LoginCard />} />
-        <Route path="signup" element={<SimpleRegistrationForm />} />
-        <Route path="/pendingrequest2" element={<PendingRequest2 />} />
-        <Route path="/" element={<Home />} />
-
-        <Route element={<AppLayout />}>
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path="/reset-Password" element={<ResetPassword />} />
+      <div>
+        <WebSocketConnection />
+        <Routes>
           <Route path="signin" element={<LoginCard />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
-          <Route path="/carlist" element={<BuyCar/>} />
-          <Route path="/premiumCarList" element={<PremiumCarList />} />  
-          <Route path="/carimagecarousel" element={<CarImageCarousel />} />
-          <Route path="/carlistadmin" element={<AdminCarList />} />
-          <Route path="/adminB2B" element={<AdminB2BList />} />
+          <Route path="signup" element={<SimpleRegistrationForm />} />
+          <Route path="/pendingrequest2" element={<PendingRequest2 />} />
+          <Route path="/" element={<Home />} />
 
-          <Route path="/wsConnction" element={<BiddingCar />} />
-          <Route
-            path="/carlist/cardetails/:carId"
-            element={<CarDetailsById />}
-          />
-          <Route
-            path="/carlist/cardetails/premium/:carId"
-            element={<CarDetailsByIdPremium />}
-          />
-          <Route
-            path="/biddinglist/cardetails/:beadingCarId/:timerId"
-            element={<BiddingCarDetailsById1 />}
-          />
-          <Route
-            path="/biddinglist/cardetails/:beadingCarId/success/:timerId"
-            element={<BiddingCarDetailsById1 />}
-          />
+          <Route element={<AppLayout />}>
+            <Route path="/forgetPassword" element={<ForgetPassword />} />
+            <Route path="/reset-Password" element={<ResetPassword />} />
+            <Route path="signin" element={<LoginCard />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
+            <Route path="/carlist" element={<BuyCar />} />
+            <Route path="/premiumCarList" element={<PremiumCarList />} />
+            <Route path="/carimagecarousel" element={<CarImageCarousel />} />
+            <Route path="/carlistadmin" element={<AdminCarList />} />
+            <Route path="/adminB2B" element={<AdminB2BList />} />
 
-          <Route
-            path="/biddinglist/cardetails/:beadingCarId"
-            element={<BiddingCarDetailsById1 />}
-          />
-          <Route
-            path="/biddinglist/cardetail/:page/:beadingCarId"
-            element={<BiddingCarDetailsById1 />}
-          />
-          <Route path="/pendinrequest/:userid" element={<PendingRequest />} />
-          <Route path="/user/booking/:id" element={<UserConfirmBooking />} />
-          <Route
-            path="/user/UserProfileUpdate/:userProfileId"
-            element={<UserProfileUpdate />}
-          />
-          <Route path="/user/ChangePassword" element={<UserChangePassword />} />
-          <Route
-            element={
-              <AdminMiddleware allowedRoles={[...Object.values(onlyAdmin)]} />
-            }
-          >
-            <Route path="/Admin/UserRequest" element={<AdminUserReq />} />
-
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/wsConnction" element={<BiddingCar />} />
             <Route
-              path="/admin/dealer/carlist/:id"
-              element={<AdminCarList />}
-            />
-            <Route path="/admin/dealer/:id" element={<SellForCar />} />
-            <Route path="/admin/premium/:id" element={<SellForCarPremium />} />
-
-            <Route path="/inspector" element={<InspectorList />} />
-            <Route path="/admin/salesuser" element={<SalesList />} />
-            <Route path="/CarInspection" element={<CarInspectionTable />} />
-            <Route
-              path="/admin/inspector/info/:userId"
-              element={<AdminInspectorInfo />}
+              path="/carlist/cardetails/:carId"
+              element={<CarDetailsById />}
             />
             <Route
-              path="/admin/inspection/report/:beadingCarId"
-              element={<FinalReport />}
-            />
-
-            <Route path="/carlistmodel" element={<CarListModels />} />
-            <Route path="/admin/addcolor" element={<AddColor />} />
-
-            <Route
-              path="/admin/dealer/info/:id"
-              element={<AdminDealerInfo />}
-            />
-
-            <Route path="/admin/sales/info/:id" element={<AdminDealerInfo />} />
-            <Route
-              path="/admin/dealer/edit/:userid/:id"
-              element={<AdminDealerEdit />}
+              path="/carlist/cardetails/premium/:carId"
+              element={<CarDetailsByIdPremium />}
             />
             <Route
-              path="/admin/seller/info/:userId"
-              element={<AdminSalesInfo />}
-            />
-            <Route
-              path="/admin/seller/edit/:userid/:salesPersonId"
-              element={<AdminSalesEdit />}
-            />
-            <Route
-              path="/admin/inspector/edit/:userid/:inspectorprofileid"
-              element={<AdminInspectorEdit />}
-            />
-            <Route
-              path="/transactionbyaccount"
-              element={<TransactionByAccount />}
-            />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route
-              path="/transactioncontroller"
-              element={<TransactionController />}
-            />
-            <Route path="/carlisting" element={<CarListing />} />
-            <Route path="/admin/biddingcar" element={<BiddingDealerCars />} />
-            <Route path="/carlisttable" element={<CarListTable />} />
-
-            <Route
-              path="/admin/carverify/:beadingCarId"
-              element={<CarVerify />}
-            />
-            <Route
-              path="/admin/inspection/report/:beadingCarId"
-              element={<FinalReport />}
-            />
-            <Route
-              path="/admin/salesDealers/:salePersonId"
-              element={<SalesDealer />}
-            />
-          </Route>
-
-          <Route
-            element={
-              <DealerMiddleware allowedRoles={[...Object.values(onlyDealer)]} />
-            }
-          >
-            <Route path="/dealer/B2B" element={<ActiveCarList />} />
-            <Route path="/dealer/:id" element={<SellForCar />} />
-            <Route path="/dealer/premium/:id" element={<SellForCarPremium />} />
-            <Route path="/dealer/b2b/:id" element={<CarList />} />
-            <Route path="/dealer/:id/addcar" element={<AddDealerCar2 />} />
-            <Route
-              path="/dealer/premium/:id/addcar"
-              element={<AddPremiumCarForm />}
-            />
-
-            <Route
-              path="/dealer/:id/uploadimage/:carId"
-              element={<Uploadimages2 />}
-            />
-            <Route path="/dealer/:id/edit" element={<DealerEdit />} />
-            <Route
-              path="/dealer/finalreport/:beadingCarId"
-              element={<FinalReport />}
-            />
-            <Route path="/dealer/info/:id" element={<AdminDealerInfo />} />
-
-            <Route
-              path="/dealer/live/carDetails/:bidCarId/:beadingCarId"
+              path="/biddinglist/cardetails/:beadingCarId/:timerId"
               element={<BiddingCarDetailsById1 />}
             />
             <Route
-              path="/dealer/:id/car/edit/:carId"
-              element={<EditDealerCar />}
-            />
-            <Route
-              path="/dealer/premium/:id/car/edit/:carId"
-              element={<EditPremiumCar />}
-            />
-            <Route
-              path="/dealer/:carId/:id/editimage"
-              element={<EditImage />}
-            />
-            <Route
-              path="/dealer/:id/booking/confirm"
-              element={<OrderDealer />}
-            />
-            <Route
-              path="/dealer/:id/b2b/confirm"
-              element={<OrderDealerB2B />}
-            />
-            <Route
-              path="/dealer/:id/allpending"
-              element={<DealerAllPendingRequest />}
-            />
-            <Route
-              path="/dealer/:id/b2bpending"
-              element={<B2BPendingRequest />}
-            />
-            <Route path="/dealer/biddingcar" element={<BiddingDealerCars />} />
-            <Route
-              path="/car/:CarId/pendinguser"
-              element={<DealerPendingRequest />}
-            />
-            <Route
-              path="dealer/finalreport/:beadingCarId"
-              element={<FinalReport />}
-            />
-            <Route path="/dealer/live/cars" element={<LiveBid />} />
-            <Route path="/dealer/winnersection" element={<WinnerSection />} />
-            <Route path="/biddingcardetail" element={<BiddingCarDetail />} />
-          </Route>
-          <Route
-            path="/user/car/status/:userFormId"
-            element={<FinalReportUser />}
-          />
-          <Route path="/user/" element={<FinalReportUser />} />
-          <Route
-            element={
-              <InspectorMiddleware
-                allowedRoles={[...Object.values(onlyInspector)]}
-              />
-            }
-          >
-            <Route
-              path="/Inspector/ChangePassword"
-              element={<InspectorChangePassword />}
-            />
-            <Route
-              path="/inspector/info/:userId"
-              element={<AdminInspectorInfo />}
+              path="/biddinglist/cardetails/:beadingCarId/success/:timerId"
+              element={<BiddingCarDetailsById1 />}
             />
 
             <Route
-              path="/inspector/carverify/:beadingCarId"
-              element={<CarVerify />}
-            />
-            <Route
-              path="/inspector/carverify/:beadingCarId"
-              element={<CarVerify />}
-            />
-            <Route path="/inspector/car" element={<CarListing />} />
-            <Route
-              path="/inspector/user/cars"
-              element={<UserInspectionCars />}
-            />
-            {/* <Route path="/inspector/carverify/:beadingCarId" element={<CarVerify />} /> */}
-            {/* <Route path="/inspector/car" element={<CarListing />} /> */}
-            <Route path="/inspector/car/add" element={<BiddingAddCar2 />} />
-            <Route
-              path="/inspector/edit/:userid/:inspectorprofileid"
-              element={<InspectorEdit />}
-            />
-          </Route>
-
-          <Route path="/bidding" element={<BiddingMainPage />} />
-          <Route path="/bidding/:userid/addcar" element={<BiddingAddCar />} />
-          <Route
-            path="/bidding/:beadingCarId/bideditcar"
-            element={<BiddingEditCar />}
-          />
-          <Route
-            path="/inspector/users/car/:saleCarId"
-            element={<UserSaleCarAdd />}
-          />
-          <Route path="/bidding/:id/:carid/settimer" element={<SetTimer />} />
-          <Route
-            path="/car/:CarId/pendingreq"
-            element={<BiddingDealerPendingReq />}
-          />
-          <Route
-            path="/bidding/:beadingCarId/uploadimage"
-            element={<BiddingEditImage />}
-          />
-
-          <Route
-            path="/bidding/:beadingCarId/update/image"
-            element={<UploadImages3 />}
-          />
-
-          {/* <Route path="/bidding/:carId/uploadimage" element={<UploadImages3 />} /> */}
-          {/* <Route path="/bidding/:carId/:id/editimage" element={<EditImage />} /> */}
-          <Route
-            element={
-              <SalePersonMiddleware
-                allowedRoles={[...Object.values(onlySeller)]}
-              />
-            }
-          >
-            <Route path="/Seller/b2b/:status" element={<B2BSeller />} />
-            <Route
-              path="/Seller/b2b/car/:status/:beadingCarId"
+              path="/biddinglist/cardetails/:beadingCarId"
               element={<BiddingCarDetailsById1 />}
             />
             <Route
-              path="/Seller/UserRequest/Edit/:userFormId"
-              element={<SalerUserSaleReqEdit />}
+              path="/biddinglist/cardetail/:page/:beadingCarId"
+              element={<BiddingCarDetailsById1 />}
             />
-            <Route path="/seller/request/:status" element={<AdminUserReq />} />
+            <Route path="/pendinrequest/:userid" element={<PendingRequest />} />
+            <Route path="/user/booking/:id" element={<UserConfirmBooking />} />
             <Route
-              path="/Seller/ChangePassword"
-              element={<SalerChangePassword />}
-            />
-            <Route path="/sales/salesDealers" element={<SalesDealer />} />
-            <Route path="/sales/biddingcar" element={<BiddingDealerCars />} />
-            <Route
-              path="/sale/carverify/:beadingCarId"
-              element={<CarVerify />}
+              path="/user/UserProfileUpdate/:userProfileId"
+              element={<UserProfileUpdate />}
             />
             <Route
-              path="/sale/inspection/report/:beadingCarId"
-              element={<FinalReport />}
+              path="/user/ChangePassword"
+              element={<UserChangePassword />}
             />
             <Route
-              path="/seller/edit/:userid/:salesPersonId"
-              element={<SalerEdit />}
+              element={
+                <AdminMiddleware allowedRoles={[...Object.values(onlyAdmin)]} />
+              }
+            >
+              <Route path="/Admin/UserRequest" element={<AdminUserReq />} />
+
+              <Route path="/admin" element={<Admin />} />
+              <Route
+                path="/admin/dealer/carlist/:id"
+                element={<AdminCarList />}
+              />
+              <Route path="/admin/dealer/:id" element={<SellForCar />} />
+              <Route
+                path="/admin/premium/:id"
+                element={<SellForCarPremium />}
+              />
+
+              <Route path="/inspector" element={<InspectorList />} />
+              <Route path="/admin/salesuser" element={<SalesList />} />
+              <Route path="/CarInspection" element={<CarInspectionTable />} />
+              <Route
+                path="/admin/inspector/info/:userId"
+                element={<AdminInspectorInfo />}
+              />
+              <Route
+                path="/admin/inspection/report/:beadingCarId"
+                element={<FinalReport />}
+              />
+
+              <Route path="/carlistmodel" element={<CarListModels />} />
+              <Route path="/admin/addcolor" element={<AddColor />} />
+
+              <Route
+                path="/admin/dealer/info/:id"
+                element={<AdminDealerInfo />}
+              />
+
+              <Route
+                path="/admin/sales/info/:id"
+                element={<AdminDealerInfo />}
+              />
+              <Route
+                path="/admin/dealer/edit/:userid/:id"
+                element={<AdminDealerEdit />}
+              />
+              <Route
+                path="/admin/seller/info/:userId"
+                element={<AdminSalesInfo />}
+              />
+              <Route
+                path="/admin/seller/edit/:userid/:salesPersonId"
+                element={<AdminSalesEdit />}
+              />
+              <Route
+                path="/admin/inspector/edit/:userid/:inspectorprofileid"
+                element={<AdminInspectorEdit />}
+              />
+              <Route
+                path="/transactionbyaccount"
+                element={<TransactionByAccount />}
+              />
+              <Route path="/wallet" element={<Wallet />} />
+              <Route
+                path="/transactioncontroller"
+                element={<TransactionController />}
+              />
+              <Route path="/carlisting" element={<CarListing />} />
+              <Route path="/admin/biddingcar" element={<BiddingDealerCars />} />
+              <Route path="/carlisttable" element={<CarListTable />} />
+
+              <Route
+                path="/admin/carverify/:beadingCarId"
+                element={<CarVerify />}
+              />
+              <Route
+                path="/admin/inspection/report/:beadingCarId"
+                element={<FinalReport />}
+              />
+              <Route
+                path="/admin/salesDealers/:salePersonId"
+                element={<SalesDealer />}
+              />
+            </Route>
+
+            <Route
+              element={
+                <DealerMiddleware
+                  allowedRoles={[...Object.values(onlyDealer)]}
+                />
+              }
+            >
+              <Route path="/dealer/B2B" element={<ActiveCarList />} />
+              <Route path="/dealer/:id" element={<SellForCar />} />
+              <Route
+                path="/dealer/premium/:id"
+                element={<SellForCarPremium />}
+              />
+              <Route path="/dealer/b2b/:id" element={<CarList />} />
+              <Route path="/dealer/:id/addcar" element={<AddDealerCar2 />} />
+              <Route
+                path="/dealer/premium/:id/addcar"
+                element={<AddPremiumCarForm />}
+              />
+
+              <Route
+                path="/dealer/:id/uploadimage/:carId"
+                element={<Uploadimages2 />}
+              />
+              <Route path="/dealer/:id/edit" element={<DealerEdit />} />
+              <Route
+                path="/dealer/finalreport/:beadingCarId"
+                element={<FinalReport />}
+              />
+              <Route path="/dealer/info/:id" element={<AdminDealerInfo />} />
+
+              <Route
+                path="/dealer/live/carDetails/:bidCarId/:beadingCarId"
+                element={<BiddingCarDetailsById1 />}
+              />
+              <Route
+                path="/dealer/:id/car/edit/:carId"
+                element={<EditDealerCar />}
+              />
+              <Route
+                path="/dealer/premium/:id/car/edit/:carId"
+                element={<EditPremiumCar />}
+              />
+              <Route
+                path="/dealer/:carId/:id/editimage"
+                element={<EditImage />}
+              />
+              <Route
+                path="/dealer/:id/booking/confirm"
+                element={<OrderDealer />}
+              />
+              <Route
+                path="/dealer/:id/b2b/confirm"
+                element={<OrderDealerB2B />}
+              />
+              <Route
+                path="/dealer/:id/allpending"
+                element={<DealerAllPendingRequest />}
+              />
+              <Route
+                path="/dealer/:id/b2bpending"
+                element={<B2BPendingRequest />}
+              />
+              <Route
+                path="/dealer/biddingcar"
+                element={<BiddingDealerCars />}
+              />
+              <Route
+                path="/car/:CarId/pendinguser"
+                element={<DealerPendingRequest />}
+              />
+              <Route
+                path="dealer/finalreport/:beadingCarId"
+                element={<FinalReport />}
+              />
+              <Route path="/dealer/live/cars" element={<LiveBid />} />
+              <Route path="/dealer/winnersection" element={<WinnerSection />} />
+              <Route path="/biddingcardetail" element={<BiddingCarDetail />} />
+            </Route>
+            <Route
+              path="/user/car/status/:userFormId"
+              element={<FinalReportUser />}
+            />
+            <Route path="/user/" element={<FinalReportUser />} />
+            <Route
+              element={
+                <InspectorMiddleware
+                  allowedRoles={[...Object.values(onlyInspector)]}
+                />
+              }
+            >
+              <Route
+                path="/Inspector/ChangePassword"
+                element={<InspectorChangePassword />}
+              />
+              <Route
+                path="/inspector/info/:userId"
+                element={<AdminInspectorInfo />}
+              />
+
+              <Route
+                path="/inspector/carverify/:beadingCarId"
+                element={<CarVerify />}
+              />
+              <Route
+                path="/inspector/carverify/:beadingCarId"
+                element={<CarVerify />}
+              />
+              <Route path="/inspector/car" element={<CarListing />} />
+              <Route
+                path="/inspector/user/cars"
+                element={<UserInspectionCars />}
+              />
+              {/* <Route path="/inspector/carverify/:beadingCarId" element={<CarVerify />} /> */}
+              {/* <Route path="/inspector/car" element={<CarListing />} /> */}
+              <Route path="/inspector/car/add" element={<BiddingAddCar2 />} />
+              <Route
+                path="/inspector/edit/:userid/:inspectorprofileid"
+                element={<InspectorEdit />}
+              />
+            </Route>
+
+            <Route path="/bidding" element={<BiddingMainPage />} />
+            <Route path="/bidding/:userid/addcar" element={<BiddingAddCar />} />
+            <Route
+              path="/bidding/:beadingCarId/bideditcar"
+              element={<BiddingEditCar />}
             />
             <Route
-              path="/sale/dealer/edit/:userid/:id"
-              element={<AdminDealerEdit />}
+              path="/inspector/users/car/:saleCarId"
+              element={<UserSaleCarAdd />}
             />
-            <Route path="/seller/info/:userId" element={<AdminSalesInfo />} />
-            <Route path="/sale/dealer/info/:id" element={<AdminDealerInfo />} />
+            <Route path="/bidding/:id/:carid/settimer" element={<SetTimer />} />
+            <Route
+              path="/car/:CarId/pendingreq"
+              element={<BiddingDealerPendingReq />}
+            />
+            <Route
+              path="/bidding/:beadingCarId/uploadimage"
+              element={<BiddingEditImage />}
+            />
+
+            <Route
+              path="/bidding/:beadingCarId/update/image"
+              element={<UploadImages3 />}
+            />
+
+            {/* <Route path="/bidding/:carId/uploadimage" element={<UploadImages3 />} /> */}
+            {/* <Route path="/bidding/:carId/:id/editimage" element={<EditImage />} /> */}
+            <Route
+              element={
+                <SalePersonMiddleware
+                  allowedRoles={[...Object.values(onlySeller)]}
+                />
+              }
+            >
+              <Route path="/Seller/b2b/:status" element={<B2BSeller />} />
+              <Route
+                path="/Seller/b2b/car/:status/:beadingCarId"
+                element={<BiddingCarDetailsById1 />}
+              />
+              <Route
+                path="/Seller/UserRequest/Edit/:userFormId"
+                element={<SalerUserSaleReqEdit />}
+              />
+              <Route
+                path="/seller/request/:status"
+                element={<AdminUserReq />}
+              />
+              <Route
+                path="/Seller/ChangePassword"
+                element={<SalerChangePassword />}
+              />
+              <Route path="/sales/salesDealers" element={<SalesDealer />} />
+              <Route path="/sales/biddingcar" element={<BiddingDealerCars />} />
+              <Route
+                path="/sale/carverify/:beadingCarId"
+                element={<CarVerify />}
+              />
+              <Route
+                path="/sale/inspection/report/:beadingCarId"
+                element={<FinalReport />}
+              />
+              <Route
+                path="/seller/edit/:userid/:salesPersonId"
+                element={<SalerEdit />}
+              />
+              <Route
+                path="/sale/dealer/edit/:userid/:id"
+                element={<AdminDealerEdit />}
+              />
+              <Route path="/seller/info/:userId" element={<AdminSalesInfo />} />
+              <Route
+                path="/sale/dealer/info/:id"
+                element={<AdminDealerInfo />}
+              />
+            </Route>
+            <Route path="/user/:userid/favorite" element={<FavoritePage />} />
+            <Route path="/sellcarlist" element={<SellCarList />} />
+            <Route path="/sellcarform" element={<SellCarForm />} />
+
+            <Route
+              path="/user/sell/edit/:userFormId"
+              element={<EditSellForm />}
+            />
+
+            <Route path="/user" element={<UserInfo />} />
           </Route>
-          <Route path="/user/:userid/favorite" element={<FavoritePage />} />
-          <Route path="/sellcarlist" element={<SellCarList />} />
-          <Route path="/sellcarform" element={<SellCarForm />} />
-
-          <Route
-            path="/user/sell/edit/:userFormId"
-            element={<EditSellForm />}
-          />
-
-          <Route path="/user" element={<UserInfo />} />
-        </Route>
-        <Route path="/premiumcars" element={<PremiumCars />} />
-        <Route path="/user/info" element={<UserInfo />} />
-        <Route path="/DealerContact" element={<DealerContact />} />
-        {/* <Route path="/trans" element={<CardDetailss/>}/> */}
-        <Route element={<AppLayout2 />}>
-          <Route path="/aboutus" element={<AboutUs />} />
-          <Route path="/contactus" element={<ContactUs />} />
-          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-          <Route path="/cookiepolicy" element={<CookiePolicy />} />
-        </Route>
-        
-        
-      </Routes>
-      < ScrollToTopButton/>
+          <Route path="/premiumcars" element={<PremiumCars />} />
+          <Route path="/user/info" element={<UserInfo />} />
+          <Route path="/DealerContact" element={<DealerContact />} />
+          {/* <Route path="/trans" element={<CardDetailss/>}/> */}
+          <Route element={<AppLayout2 />}>
+            <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/contactus" element={<ContactUs />} />
+            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+            <Route path="/cookiepolicy" element={<CookiePolicy />} />
+          </Route>
+        </Routes>
+        <ScrollToTopButton />
+      </div>
+      {/* )} */}
     </>
   );
 }

@@ -270,7 +270,7 @@ const FilterPremiumCars1 = ({ setUrlState, setSearchClicked }) => {
             <div>
               <p className="font-bold mb-5 text-xl text-orange-400">Filters</p>
             </div>
-            <div className="md:mb-1 md:grid md:grid-cols-5 md:gap-6  md:items-center">
+            <div className="md:mb-1 md:grid md:grid-cols-4 md:gap-6  md:items-center">
               
               <div className="items-center justify-center">
                 <Autocomplete

@@ -13,43 +13,54 @@ import SearchByBody from "../components/home/SearchByBody";
 import Testimonials from "../ui/Testimonials";
 import FeatureSection from "./FeaturedCars";
 import CarFilterForm from "./user/CarFilterForm ";
+// import SplashScreen from "../components/LoadingScreen";
+// import { useState, useEffect } from "react";
 
 const Home = () => {
-  // const { data, error } = useFilterCarQuery();
-  // const { data, error } = useGetRecentCarQuery();
+  // const [showSplash, setShowSplash] = useState(true);
 
-
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setShowSplash(false), 5000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <div>
-      <StickyNavbar />
-  
-      {/* Section A & B wrapper */}
-      <div className="relative w-full">
-        {/* Component A: HomeSection */}
-        <HomeSection />
-  
-        {/* Component C: CarFilterForm */}
-        <div className="w-full px-4 md:px-8
-      md:absolute md:top-[550px] md:left-1/2 md:transform md:-translate-x-1/2 md:z-50">
-          <CarFilterForm/>
+      {/* {showSplash ? (
+        <SplashScreen />
+      ) : ( */}
+      <div>
+        <StickyNavbar />
+
+        {/* Section A & B wrapper */}
+        <div className="relative w-full">
+          {/* Component A: HomeSection */}
+          <HomeSection />
+
+          {/* Component C: CarFilterForm */}
+          <div
+            className="w-full px-4 md:px-8
+      md:absolute md:top-[550px] md:left-1/2 md:transform md:-translate-x-1/2 md:z-50"
+          >
+            <CarFilterForm />
+          </div>
+
+          {/* Spacer to make room for the overlapping form */}
+          <div className="hidden md:block h-[200px]"></div>
+
+          {/* Component B: FeaturedCars */}
+          <FeatureSection />
         </div>
-        
-  
-        {/* Spacer to make room for the overlapping form */}
-       <div className="hidden md:block h-[200px]"></div>
-  
-        {/* Component B: FeaturedCars */}
-        <FeatureSection/>
+
+        {/* Other sections below */}
+        <AboutUs />
+        <StartSection />
+        <SearchByBody />
+        <Testimonials />
+        <Footer />
       </div>
-  
-      {/* Other sections below */}
-      <AboutUs />
-      <StartSection />
-      <SearchByBody />
-      <Testimonials />
-      <Footer />
+      {/* )} */}
     </div>
   );
-}
+};
 export default Home;
