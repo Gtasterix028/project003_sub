@@ -208,22 +208,19 @@
 
 
 // LoginCard.jsx
-import  { useState } from 'react';
-import { TextField, Button, Typography, Card, CardContent, CardActions, Box ,IconButton } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-
+import { useState } from 'react';
+import { TextField, Button, Typography, Card, CardContent, CardActions, Box, IconButton } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSignInMutation } from "../services/authAPI";
 import { setToken } from "../features/authSlice";
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-// import cartechlogo2 from '../../public/cars/cartechlogo2.png'; // Import the logo from the src folder
-import backgroundImage from '../../public/cars/Bg3.jpg'; // Import the background image from the cars folder
-import FacebookIcon from '@mui/icons-material/Facebook'; // Import Facebook icon
+import backgroundImage from '../../public/cars/Bg3.jpg'; 
+import FacebookIcon from '@mui/icons-material/Facebook'; 
 import GoogleIcon from '@mui/icons-material/Google';
-import TwitterIcon from '@mui/icons-material/Twitter'; // Import Twitter icon
+import TwitterIcon from '@mui/icons-material/Twitter'; 
 import { StickyNavbar } from '../components/navbars/StickyNavbar';
 
 const LoginCard = () => {
@@ -242,15 +239,11 @@ const LoginCard = () => {
     }));
   };
 
- 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data , error} = await signIn(formStateData);
-            
+      const { data, error } = await signIn(formStateData);
       if (data) {
-         
         const jwtDecodes = jwtDecode(data);
         const jwtDecodesJson = JSON.stringify(jwtDecodes);
         localStorage.setItem("userInfo", jwtDecodesJson);
@@ -261,37 +254,36 @@ const LoginCard = () => {
         }, 1000); 
         dispatch(setToken(data));
       } else {
-        if(error.status === 401){
+        if (error?.status === 401) {
           toast.error(error.data.message);
-        }else{
-
-          toast.error("email and password is not match");
+        } else {
+          toast.error("Email and password do not match");
         }
       }
-
-      // Handle successful sign-in, such as redirecting to a different page
     } catch (error) {
-      // console.log(error);
-      // Handle sign-in error
+      console.error(error);
     }
-
-    
   };
-
 
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-
-
   return (
     <>
-      <StickyNavbar></StickyNavbar>
-
+      <StickyNavbar />
       <Box
         sx={{
-          backgroundImage: `url(${backgroundImage})`, // Use the imported background image
+          backgroundImage: {
+            xs: "none", // mobile
+            sm: "none", // tablet
+            md: `url(${backgroundImage})`, // desktop
+          },
+          backgroundColor: {
+            xs: "black", 
+            sm: "black",
+            md: "transparent",
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "100vh",
@@ -301,56 +293,39 @@ const LoginCard = () => {
           position: "relative",
         }}
       >
-        {/* Overlay to darken the background image */}
+        {/* Overlay for desktop (darken image only on md+) */}
         <Box
           sx={{
+            display: { xs: "none", sm: "none", md: "block" },
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.3)", // Adjust opacity as needed
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
           }}
         />
+        
         <ToastContainer autoClose={2000} />
 
-        {/* Logo Image
-      <img
-        src={cartechlogo2}
-        alt="Car Tech Logo"
-        style={{
-          position: "absolute",
-          top: "20px", // Adjust the top position as needed
-          left: "50%",
-          transform: "translateX(-50%)", // Center horizontally
-          zIndex: 1, // Ensure it appears above the overlay
-          width: "150px", // Adjust the width as needed
-        }}
-      /> */}
-
-        {/* Wrap the Card inside a Box */}
         <Box
           sx={{
             zIndex: 2,
-            // backgroundColor: "rgba(255, 255, 255, 0.8)",
-            padding: "20px", // Optional: add some padding
+            paddingTop: "50px",
             margin: "20px",
           }}
         >
           <Card
             style={{
-              width: "400px",
-              margin: "40px auto 0", // Increased top margin to 40px
-              // 20px top margin, auto left/right, 0 bottom margin
+              width: "350px",
+              margin: "40px auto 0",
               textAlign: "center",
               backgroundColor: "transparent",
-              borderRadius: "20px", // Optional: add border radius for rounded corners
-              padding: "20px", // Optional: add some padding
-
-              border: "2px solid rgba(255, 255, 255, 0.8)", // Set the border color and width
-              backdropFilter: "blur(10px)", // Adjust the blur radius as needed
+              borderRadius: "20px",
+              padding: "20px",
+              border: "2px solid rgba(255, 255, 255, 0.8)",
+              backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
-              // Set background to transparent
             }}
           >
             <CardContent>
@@ -368,32 +343,32 @@ const LoginCard = () => {
                   margin="normal"
                   required
                   InputProps={{
-                    style: { color: "white" }, // Change text color to white
+                    style: { color: "white", height:"65px" },
                   }}
                   InputLabelProps={{
-                    style: { color: "white" }, // Change label color to white
+                    style: { color: "white" },
                   }}
                   variant="outlined"
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.8)", // Border color when not focused
+                        borderColor: "rgba(255, 255, 255, 0.8)",
                       },
                       "&:hover fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.8)", // Border color on hover
+                        borderColor: "rgba(255, 255, 255, 0.8)",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.8)", // Border color when focused
+                        borderColor: "rgba(255, 255, 255, 0.8)",
                       },
                     },
                     "& .MuiInputBase-input": {
-                      color: "white", // Text color when focused
+                      color: "white",
                     },
-                    "& .MuiInputLabel-root": {
-                      color: "white", // Label color when not focused
-                    },
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "white", // Label color when focused
+                    "& input:-webkit-autofill": {
+                      WebkitBoxShadow: "0 0 0 1000px transparent inset !important",
+                      WebkitTextFillColor: "white !important",
+                      caretColor: "white !important",
+                      transition: "background-color 9999s ease-in-out 0s",
                     },
                   }}
                 />
@@ -416,35 +391,41 @@ const LoginCard = () => {
                         )}
                       </Button>
                     ),
-                    style: { color: "white" }, // Change text color to white
+                    style: { color: "white", height: "65px" },
                   }}
                   InputLabelProps={{
-                    style: { color: "white" }, // Change label color to white
+                    style: { color: "white" },
                   }}
                   variant="outlined"
                   sx={{
                     "& .MuiOutlinedInput-root": {
+                      backgroundColor: "transparent",
                       "& fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.8)", // Border color when not focused
+                        borderColor: "rgba(255, 255, 255, 0.8)",
                       },
                       "&:hover fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.8)", // Border color on hover
+                        borderColor: "rgba(255, 255, 255, 0.8)",
+                      },
+                      "&.Mui-focused": {
+                        backgroundColor: "transparent",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.8)", // Border color when focused
+                        borderColor: "rgba(255, 255, 255, 0.8)",
                       },
                     },
                     "& .MuiInputBase-input": {
-                      color: "white", // Text color when focused
+                      color: "white",
+                      padding: "16px 20px",
                     },
-                    "& .MuiInputLabel-root": {
-                      color: "white", // Label color when not focused
-                    },
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "white", // Label color when focused
+                    "& input:-webkit-autofill": {
+                      WebkitBoxShadow: "0 0 0 1000px transparent inset !important",
+                      WebkitTextFillColor: "white !important",
+                      caretColor: "white",
+                      transition: "background-color 9999s ease-in-out 0s",
                     },
                   }}
                 />
+
                 <CardActions>
                   <Button
                     type="submit"
@@ -457,19 +438,16 @@ const LoginCard = () => {
                 </CardActions>
               </form>
             </CardContent>
-            <CardActions
-              style={{ justifyContent: "center", marginBottom: "10px" }}
-            >
+
+            <CardActions style={{ justifyContent: "center", marginBottom: "10px" }}>
               <Link to="/signup" style={{ textDecoration: "none" }}>
                 <Typography variant="body2" style={{ color: "white" }}>
-                  Dont have an account? Sign Up.
+                  Don’t have an account? Sign Up
                 </Typography>
               </Link>
             </CardActions>
 
-            <CardActions
-              style={{ justifyContent: "center", marginBottom: "10px" }}
-            >
+            <CardActions style={{ justifyContent: "center", marginBottom: "10px" }}>
               <Link to="/forgetPassword" style={{ textDecoration: "none" }}>
                 <Typography variant="body2" style={{ color: "white" }}>
                   Forget Password ?
@@ -477,21 +455,14 @@ const LoginCard = () => {
               </Link>
             </CardActions>
 
-            {/* Social Media Login Buttons */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: "10px",
-              }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
               <IconButton aria-label="Facebook" style={{ color: "peachpuff" }}>
                 <FacebookIcon />
               </IconButton>
               <IconButton aria-label="Google" style={{ color: "peachpuff" }}>
                 <GoogleIcon />
               </IconButton>
-              <IconButton aria-label="Google" style={{ color: "peachpuff" }}>
+              <IconButton aria-label="Twitter" style={{ color: "peachpuff" }}>
                 <TwitterIcon />
               </IconButton>
             </Box>
@@ -500,7 +471,6 @@ const LoginCard = () => {
       </Box>
     </>
   );
-  };
+};
 
-  export default LoginCard;
-            
+export default LoginCard;
