@@ -61,7 +61,7 @@ const cityOptions = {
 
 export default function AddDealerCar() {
   const { data: brandData } = useGetOnlyBrandsQuery();
-  const { data : colorData } = useGetAllColorQuery();
+  const { data: colorData } = useGetAllColorQuery();
   const colors = colorData?.list.map((item) => item.name) || [];
   console.log(colors);
   const brands = brandData?.list.map((item) => item.brand) || [];
@@ -72,7 +72,7 @@ export default function AddDealerCar() {
   const [variantOptions, setVariantOptions] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const [inputValue, setInputValue] = useState(""); 
+  const [inputValue, setInputValue] = useState("");
   const { data: variantData } = useGetVariantsQuery(selectedBrand, {
     skip: !selectedBrand,
   });
@@ -202,19 +202,19 @@ export default function AddDealerCar() {
       date: formattedDate,
       carInsuranceType: formData.carInsuranceType,
     };
-    try{
+    try {
       const res = await carRegister(data);
       //console.log(data);
-    if (res?.data?.status === "success") {
-      toast.success("Car Added");
-      setTimeout(() => {
-        navigate(`/dealer/${id}/uploadimage/${res?.data?.message}`); // Corrected URL string with backticks (`) for interpolation
-      }, 1000);
-    }
-    }catch(error){
+      if (res?.data?.status === "success") {
+        toast.success("Car Added");
+        setTimeout(() => {
+          navigate(`/dealer/${id}/uploadimage/${res?.data?.message}`); // Corrected URL string with backticks (`) for interpolation
+        }, 1000);
+      }
+    } catch (error) {
       console.error("Error adding car", error);
     }
-    
+
   };
 
   const handleBrandChange = (event, newValue) => {
@@ -250,12 +250,12 @@ export default function AddDealerCar() {
 
   const handleColorChange = (event, newValue) => {
     const color = newValue;
-    
+
     setInputValue(color);
     setFormData({
       ...formData,
       color,
-      
+
     });
   };
 
@@ -317,7 +317,7 @@ export default function AddDealerCar() {
         <div>
           <form onSubmit={handleSubmit} className="w-full md:w-[45rem]">
             <div className="flex justify-center">
-              <p className="text-3xl font-semibold m-4">Add Dealer Car</p>
+              <p className="text-3xl  mt-10 font-semibold m-4">Add Dealer Car</p>
             </div>
             {/* first part */}
             <div className="md:flex gap-2">
@@ -334,23 +334,43 @@ export default function AddDealerCar() {
                       sx={{
                         "& .MuiInputBase-root": {
                           height: "40px",
-                          padding: "0 14px",
+                          padding: "10 14px",
                           paddingBottom: "8px",
                           top: 0,
                         },
                         "& .MuiInputBase-input": {
                           height: "100%",
-                          padding: "0",
+                          padding: "10",
+                        },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
                         },
                       }}
                       {...params}
+
                       label="Brands"
                       InputLabelProps={{
-                        style: {
-                          fontSize: "0.75rem",
-                          // paddingTop : '20px',
-                          //  background : 'black'
-                        }, // Adjust the font size here
+                        sx: {
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial",
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                          "&.Mui-focused": {
+                            color: "black",
+                          },
+                        },
+
                       }}
                     />
                   )}
@@ -378,12 +398,33 @@ export default function AddDealerCar() {
                           height: "100%",
                           padding: "0",
                         },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
+                        },
                       }}
                       {...params}
                       label="Varient"
+
                       InputLabelProps={{
-                        style: {
-                          fontSize: "0.75rem",
+                        sx: {
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial",
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                          "&.Mui-focused": {
+                            color: "black",
+                          },
                           // paddingTop : '20px',
                           //  background : 'black'
                         }, // Adjust the font size here
@@ -417,12 +458,32 @@ export default function AddDealerCar() {
                           height: "100%",
                           padding: "0",
                         },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
+                        },
                       }}
                       {...params}
                       label="SubVarient"
                       InputLabelProps={{
-                        style: {
-                          fontSize: "0.75rem",
+                        sx: {
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial",
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                          "&.Mui-focused": {
+                            color: "black",
+                          },
                           // paddingTop : '20px',
                           //  background : 'black'
                         }, // Adjust the font size here
@@ -455,18 +516,48 @@ export default function AddDealerCar() {
             </div>
             <div className="md:flex">
               <div className="mt-5 w-full">
-                <Input
+                <TextField
                   required
+                  id="price"
                   label="Price"
                   type="number"
-                  name="price"
+                  placeholder="Enter Price"
                   value={formData.price}
-                  onChange={(event) =>
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      price: event.target.value,
+                      price: e.target.value,
                     })
                   }
+                  variant="outlined"
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: "40px",
+                      padding: "0 14px",
+                      top: 0,
+                    },
+                    "& .MuiInputBase-input": {
+                      height: "100%",
+                      padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "black" },
+                      "&:hover fieldset": { borderColor: "black" },
+                      "&.Mui-focused fieldset": { borderColor: "black" },
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1rem",
+                      fontStyle: "normal",
+                      fontWeight: "inherit",
+                      color: "black",
+                      fontFamily: "Arial, sans-serif",
+                      "& .MuiFormLabel-asterisk": { color: "red" },
+                      "&.Mui-focused": { color: "black" },
+                    },
+                  }}
                 />
               </div>
 
@@ -513,6 +604,7 @@ export default function AddDealerCar() {
                   <option>2022</option>
                   <option>2023</option>
                   <option>2024</option>
+                  <option>2025</option>
                 </select>
               </div>
             </div>
@@ -546,13 +638,23 @@ export default function AddDealerCar() {
                           height: "100%",
                           padding: "0",
                         },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
+
+                        },
                       }}
                       InputLabelProps={{
                         style: {
-                          fontSize: "0.75rem",
-                          // paddingTop : '20px',
-                          //  background : 'black'
-                        }, // Adjust the font size here
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial"
+                        },
                       }}
                     />
                   )}
@@ -587,19 +689,47 @@ export default function AddDealerCar() {
             {/* fifth part */}
             <div className="md:flex">
               <div className="mt-5 w-full">
-                <Input
+                <TextField
                   required
-                  placeholder={"Enter Area"}
-                  label={"Area"}
-                  type={"text"}
-                  name={"Area"}
+                  id="area"
+                  label="Area"
+                  placeholder="Enter Area"
                   value={formData.area}
-                  onChange={(event) =>
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      area: event.target.value,
+                      area: e.target.value,
                     })
                   }
+                  // variant="outlined"
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: "40px",
+                      padding: "0 14px",
+                      top: 0,
+                    },
+                    "& .MuiInputBase-input": {
+                      height: "100%",
+                      padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "black" },
+                      "&:hover fieldset": { borderColor: "black" },
+                      "&.Mui-focused fieldset": { borderColor: "black" },
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1rem",
+                      fontStyle: "normal",
+                      fontWeight: "inherit",
+                      color: "black",
+                      fontFamily: "Arial",
+                      "& .MuiFormLabel-asterisk": { color: "red" },
+                      "&.Mui-focused": { color: "black" },
+                    },
+                  }}
                 />
               </div>
 
@@ -661,18 +791,51 @@ export default function AddDealerCar() {
             {/* sixth part */}
             <div className="md:flex">
               <div className="mt-5 w-full">
-                <Input
+                <TextField
                   required
+                  id="kmDriven"
                   label="Km Driven"
                   type="number"
+                  placeholder="Enter Km Driven"
                   name="kmDriven"
                   value={formData.kmDriven}
-                  onChange={(event) =>
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      kmDriven: event.target.value,
+                      kmDriven: e.target.value,
                     })
                   }
+                  variant="outlined"
+                  fullWidth
+                  //  error={!!error}
+                  // helperText={error ? "Please enter a valid Km Driven value" : ""}
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: "40px",
+                      padding: "0 14px",
+                      top: 0,
+                    },
+                    "& .MuiInputBase-input": {
+                      height: "100%",
+                      padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "black" },
+                      "&:hover fieldset": { borderColor: "black" },
+                      "&.Mui-focused fieldset": { borderColor: "black" },
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1rem",
+                      fontStyle: "normal",
+                      fontWeight: "inherit",
+                      color: "black",
+                      fontFamily: "Arial, sans-serif",
+                      "& .MuiFormLabel-asterisk": { color: "red" },
+                      "&.Mui-focused": { color: "black" },
+                    },
+                  }}
                 />
               </div>
 
@@ -933,7 +1096,7 @@ export default function AddDealerCar() {
                   required
                   className="form-control"
                   name="description"
-                  placeholder="Vehicle Description"
+                  placeholder=" &nbsp;&nbsp; Vehicle Description"
                   value={formData.description}
                   onChange={(event) => {
                     setFormData({

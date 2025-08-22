@@ -414,12 +414,12 @@ const Footer = () => {
               Stay on top of the latest car trends, tips, and tricks for selling
               your car.
             </p>
-            <input
+            {/* <input
               type="email"
               placeholder="Your email address"
               className="w-full h-12 px-4 mb-3 rounded-2xl border border-[#6666664A] bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FF7101] text-sm"
               style={{ maxWidth: "350px" }}
-            />
+            /> */}
             <button
               className="w-full h-12 rounded-2xl bg-[#FF7101] text-white font-medium hover:bg-[#E56700] transition-colors duration-200 flex items-center justify-center text-sm"
               style={{ maxWidth: "350px" }}

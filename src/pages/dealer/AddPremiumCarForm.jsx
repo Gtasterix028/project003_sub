@@ -62,7 +62,6 @@ export default function AddPremiumCarForm() {
   const [variantOptions, setVariantOptions] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [inputValue, setInputValue] = useState("");
-
   const { data: variantData } = useGetVariantsQuery(selectedBrand, {
     skip: !selectedBrand,
   });
@@ -79,9 +78,9 @@ export default function AddPremiumCarForm() {
       (color) =>
         color && color.toLowerCase().includes((inputValue || "").toLowerCase())
     ) // Ensure both color and inputValue are strings
-    .sort(); 
+    .sort();
   const { carType } = useParams();
-  const [carRegister] = useCarRegisterPremiumMutation({carType});
+  const [carRegister] = useCarRegisterPremiumMutation({ carType });
   //  const [mult, setMult] = React.useState([]);
   const [formData, setFormData] = useState({
     //features
@@ -247,12 +246,12 @@ export default function AddPremiumCarForm() {
 
   const handleColorChange = (event, newValue) => {
     const color = newValue;
-    
+
     setInputValue(color);
     setFormData({
       ...formData,
       color,
-      
+
     });
   };
 
@@ -328,7 +327,7 @@ export default function AddPremiumCarForm() {
         <div>
           <form onSubmit={handleSubmit} className="w-full md:w-[45rem]">
             <div className="flex justify-center">
-              <p className="text-3xl font-semibold m-4">Add Premium Car</p>
+              <p className="text-3xl mt-10 font-semibold m-4">Add Premium Car</p>
             </div>
             {/* first part */}
             <div className="md:flex gap-2">
@@ -345,23 +344,43 @@ export default function AddPremiumCarForm() {
                       sx={{
                         "& .MuiInputBase-root": {
                           height: "40px",
-                          padding: "0 14px",
+                          padding: "10 14px",
                           paddingBottom: "8px",
                           top: 0,
                         },
                         "& .MuiInputBase-input": {
                           height: "100%",
-                          padding: "0",
+                          padding: "10",
+                        },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
                         },
                       }}
                       {...params}
+
                       label="Brands"
                       InputLabelProps={{
-                        style: {
-                          fontSize: "0.75rem",
-                          // paddingTop : '20px',
-                          //  background : 'black'
-                        }, // Adjust the font size here
+                        sx: {
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial",
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                          "&.Mui-focused": {
+                            color: "black",
+                          },
+                        },
+
                       }}
                     />
                   )}
@@ -389,12 +408,33 @@ export default function AddPremiumCarForm() {
                           height: "100%",
                           padding: "0",
                         },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
+                        },
                       }}
                       {...params}
                       label="Varient"
+
                       InputLabelProps={{
-                        style: {
-                          fontSize: "0.75rem",
+                        sx: {
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial",
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                          "&.Mui-focused": {
+                            color: "black",
+                          },
                           // paddingTop : '20px',
                           //  background : 'black'
                         }, // Adjust the font size here
@@ -428,12 +468,32 @@ export default function AddPremiumCarForm() {
                           height: "100%",
                           padding: "0",
                         },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
+                        },
                       }}
                       {...params}
                       label="SubVarient"
                       InputLabelProps={{
-                        style: {
-                          fontSize: "0.75rem",
+                        sx: {
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial",
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                          "&.Mui-focused": {
+                            color: "black",
+                          },
                           // paddingTop : '20px',
                           //  background : 'black'
                         }, // Adjust the font size here
@@ -466,17 +526,50 @@ export default function AddPremiumCarForm() {
             </div>
             <div className="md:flex">
               <div className="mt-5 w-full">
-                <Input
+                <TextField
                   required
+                  id="price"
                   label="Price"
                   type="number"
-                  name="price"
+                  placeholder="Enter Price"
                   value={formData.price}
-                  error={error} // Highlight input with error style
-                  onChange={handlePriceChange}
-                  helperText={
-                    error ? "Value should be greater than 1,500,000" : ""
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      price: e.target.value,
+                    })
                   }
+                  variant="outlined"
+                  fullWidth
+                  error={!!error}
+                  helperText={error ? "Value should be greater than 1,500,000" : ""}
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: "40px",
+                      padding: "0 14px",
+                      top: 0,
+                    },
+                    "& .MuiInputBase-input": {
+                      height: "100%",
+                      padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "black" },
+                      "&:hover fieldset": { borderColor: "black" },
+                      "&.Mui-focused fieldset": { borderColor: "black" },
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1rem",
+                      fontStyle: "normal",
+                      fontWeight: "inherit",
+                      color: "black",
+                      fontFamily: "Arial, sans-serif",
+                      "& .MuiFormLabel-asterisk": { color: "red" },
+                      "&.Mui-focused": { color: "black" },
+                    },
+                  }}
                 />
               </div>
 
@@ -508,6 +601,7 @@ export default function AddPremiumCarForm() {
                   <option>2022</option>
                   <option>2023</option>
                   <option>2024</option>
+                  <option>2025</option>
                 </select>
               </div>
             </div>
@@ -541,13 +635,23 @@ export default function AddPremiumCarForm() {
                           height: "100%",
                           padding: "0",
                         },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "black",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "black",
+                          },
+
+                        },
                       }}
                       InputLabelProps={{
                         style: {
-                          fontSize: "0.75rem",
-                          // paddingTop : '20px',
-                          //  background : 'black'
-                        }, // Adjust the font size here
+                          fontSize: "1rem",
+                          fontStyle: "normal",
+                          fontWeight: "inherit",
+                          color: 'black', fontFamily: "Arial"
+                        },
                       }}
                     />
                   )}
@@ -582,22 +686,49 @@ export default function AddPremiumCarForm() {
             {/* fifth part */}
             <div className="md:flex">
               <div className="mt-5 w-full">
-                <Input
+                <TextField
                   required
-                  label={"Area"}
-                  type={"text"}
-                  placeholder={"Enter Area"}
-                  name={"area"}
+                  id="area"
+                  label="Area"
+                  placeholder="Enter Area"
                   value={formData.area}
-                  onChange={(event) =>
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      area: event.target.value,
+                      area: e.target.value,
                     })
                   }
+                  // variant="outlined"
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: "40px",
+                      padding: "0 14px",
+                      top: 0,
+                    },
+                    "& .MuiInputBase-input": {
+                      height: "100%",
+                      padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "black" },
+                      "&:hover fieldset": { borderColor: "black" },
+                      "&.Mui-focused fieldset": { borderColor: "black" },
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1rem",
+                      fontStyle: "normal",
+                      fontWeight: "inherit",
+                      color: "black",
+                      fontFamily: "Arial",
+                      "& .MuiFormLabel-asterisk": { color: "red" },
+                      "&.Mui-focused": { color: "black" },
+                    },
+                  }}
                 />
               </div>
-
               <div className="mt-5 md:ml-2 w-full">
                 <select
                   required
@@ -656,20 +787,54 @@ export default function AddPremiumCarForm() {
             {/* sixth part */}
             <div className="md:flex">
               <div className="mt-5 w-full">
-                <Input
+                <TextField
                   required
+                  id="kmDriven"
                   label="Km Driven"
                   type="number"
+                  placeholder="Enter Km Driven"
                   name="kmDriven"
                   value={formData.kmDriven}
-                  onChange={(event) =>
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      kmDriven: event.target.value,
+                      kmDriven: e.target.value,
                     })
                   }
+                  variant="outlined"
+                  fullWidth
+                  error={!!error}
+                  helperText={error ? "Please enter a valid Km Driven value" : ""}
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: "40px",
+                      padding: "0 14px",
+                      top: 0,
+                    },
+                    "& .MuiInputBase-input": {
+                      height: "100%",
+                      padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "black" },
+                      "&:hover fieldset": { borderColor: "black" },
+                      "&.Mui-focused fieldset": { borderColor: "black" },
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1rem",
+                      fontStyle: "normal",
+                      fontWeight: "inherit",
+                      color: "black",
+                      fontFamily: "Arial, sans-serif",
+                      "& .MuiFormLabel-asterisk": { color: "red" },
+                      "&.Mui-focused": { color: "black" },
+                    },
+                  }}
                 />
               </div>
+
 
               <div className="mt-5 md:ml-2 w-full">
                 <select
@@ -919,8 +1084,8 @@ export default function AddPremiumCarForm() {
                 ></Input>
               </div>
             </div>
-            {/* eleventh part */}
 
+            {/* eleventh part */}
             <div className="mt-5">
               <h4>Vehicle Description</h4>
               <div className="formrow">
@@ -928,7 +1093,7 @@ export default function AddPremiumCarForm() {
                   required
                   className="form-control"
                   name="description"
-                  placeholder="Vehicle Description"
+                  placeholder=" &nbsp;&nbsp; Vehicle Description"
                   value={formData.description}
                   onChange={(event) => {
                     setFormData({
@@ -943,7 +1108,7 @@ export default function AddPremiumCarForm() {
 
             <button
               type="submit"
-              className="p-3 mt-3 bg-indigo-400 rounded-md w-28 text-white"
+              className="p-3 mt-1 mb-1 bg-indigo-400 rounded-md w-28 text-white"
               value="Add  Car"
             >
               {" "}
