@@ -130,6 +130,10 @@ const BuyCar = () => {
   const [sortBy, setSortBy] = useState("default");
   // const [showCount, setShowCount] = useState(30);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [resetFiltersFn, setResetFiltersFn] = useState(null);
+  <FilterCars setUrlState={setUrlState} onReset={(fn) => setResetFiltersFn(() => fn)} />
+
   const carsPerPage = 6;
 
   const emptyImage = "..\\..\\cars\\emptyfolder.png";
@@ -361,7 +365,17 @@ const BuyCar = () => {
                 </div>
                 <h3 className="text-2xl font-semibold text-gray-700 mb-2">No Cars Found</h3>
                 <p className="text-gray-500 mb-4">Try adjusting your filters or check back later.</p>
-                <button 
+                <button
+  onClick={() => {
+    if (resetFiltersFn) resetFiltersFn();
+    setUrlState(null);
+    setCurrentPage(1);
+  }}
+  className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors mt-4"
+>
+  Clear Filters
+</button>
+                {/* <button 
                   onClick={() => {
                     setUrlState(null);
                     setCurrentPage(1);
@@ -370,6 +384,7 @@ const BuyCar = () => {
                 >
                   Clear Filters
                 </button>
+                 */}
               </div>
             ) : (
               <GridCarList data={{...data, list: sortedCars}} error={error} refetch={refetch} isLoading={isLoading} />

@@ -83,7 +83,7 @@ const FilterCars = ({ setUrlState }) => {
     const maxYear = yearValue[1]; // Maximum year from the slider
     const minKm = kmValue[0]; // Minimum km from the slider
     const maxKm = kmValue[1]; // Maximum km from the slider
-    
+
     const url = {
       Area: filterForm.area,
       State: filterForm.state,
@@ -258,7 +258,7 @@ const FilterCars = ({ setUrlState }) => {
 
   return (
     <form onSubmit={submitHandle} className="bg-gray-10 p-1 rounded-2xl w-full mx-auto h-full sticky overflow-none">
-      {/* Make/Model/Body Group */}
+      {/* Brand/Model/Body Group */}
       <div className="mb-2 flex-1">
         <div className="text-sm font-semibold mt-3 mb-4">Filters for cars</div>
         <div className="border border-black bg-white mb-5 w-full rounded-2xl p-4 h-full">
@@ -272,7 +272,7 @@ const FilterCars = ({ setUrlState }) => {
               value={filterForm.brand}
               onChange={handleBrandChange}
               renderInput={(params) => (
-                <TextField {...params} label="Make" size="small" sx={{ boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }} />
+                <TextField {...params} label="Brand" size="small" sx={{ boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }} />
               )}
             />
             <Autocomplete
@@ -295,7 +295,7 @@ const FilterCars = ({ setUrlState }) => {
               getOptionLabel={(option) => option}
               sx={{ width: "100%", background: "White", boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }}
               value={filterForm.body || ""}
-              onChange={() => {}}
+              onChange={() => { }}
               renderInput={(params) => (
                 <TextField {...params} label="Body" size="small" sx={{ boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }} />
               )}
@@ -389,7 +389,7 @@ const FilterCars = ({ setUrlState }) => {
       {/* Location Group */}
       <div className=" mb-2 flex-1">
         <div className="bg-white rounded-xl border border-black p-4  h-full">
-          
+
           <div className="space-y-2">
             <Autocomplete
               id="state-autocomplete"
@@ -397,7 +397,7 @@ const FilterCars = ({ setUrlState }) => {
               freeSolo
               options={StateData}
               getOptionLabel={(option) => option.state}
-              sx={{  width: "100%", background: "White", boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }}
+              sx={{ width: "100%", background: "White", boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }}
               value={filterForm.state ? { state: filterForm.state } : { state: "" }}
               onChange={(event, newValue) => {
                 setFilterForm((prevForm) => ({
@@ -449,7 +449,7 @@ const FilterCars = ({ setUrlState }) => {
       {/* Other Filters Group */}
       <div className="mb-2 flex-1">
         <div className="bg-white border border-black  rounded-xl p-4 h-full">
-          
+
           <div className="space-y-2">
             <Autocomplete
               id="fueltype-autocomplete"
@@ -493,7 +493,7 @@ const FilterCars = ({ setUrlState }) => {
               getOptionLabel={(option) => option}
               sx={{ width: "100%", background: "White", boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }}
               value={filterForm.bodyType || ""}
-              onChange={() => {}}
+              onChange={() => { }}
               renderInput={(params) => (
                 <TextField {...params} label="Body Type / Car Type" size="small" sx={{ boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }} />
               )}
@@ -506,7 +506,7 @@ const FilterCars = ({ setUrlState }) => {
               getOptionLabel={(option) => option}
               sx={{ width: "100%", background: "White", boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }}
               value={filterForm.ownership || ""}
-              onChange={() => {}}
+              onChange={() => { }}
               renderInput={(params) => (
                 <TextField {...params} label="Ownership" size="small" sx={{ boxShadow: 'none', '& .MuiOutlinedInput-root': { boxShadow: 'none', minHeight: 36, fontSize: 14, padding: '0 8px' }, '& fieldset': { boxShadow: 'none' }, m: 0 }} />
               )}
@@ -518,6 +518,14 @@ const FilterCars = ({ setUrlState }) => {
       <div className="flex flex-col gap-2 mt-2">
         <Button type="submit" className="w-full bg-orange-500 text-white rounded-lg py-2 font-semibold">Search</Button>
         <Button type="button" onClick={resetForm} className="w-full bg-gray-200 text-gray-700 rounded-lg py-2 font-semibold">Reset</Button>
+        {/* <Button
+          type="button"
+          onClick={resetForm}  
+          className="bg-orange-400 text-white rounded-lg px-4 py-2 font-semibold"
+        >
+          Clear Filters
+        </Button> */}
+
       </div>
     </form>
   );

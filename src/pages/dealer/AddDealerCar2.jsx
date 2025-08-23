@@ -446,7 +446,7 @@ export default function AddDealerCar() {
                   onChange={handleVariantChange}
                   renderInput={(params) => (
                     <TextField
-                      required
+                      required  
                       sx={{
                         "& .MuiInputBase-root": {
                           height: "40px",

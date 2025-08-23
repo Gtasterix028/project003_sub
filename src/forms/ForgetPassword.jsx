@@ -49,7 +49,7 @@ setEmail("")
             </form>
 
             <div className='flex justify-center mt-5'>
-                <p> Don&apos;t have an account? <span className='text-blue-600'><Link to="/signup">Sing U</Link>p</span></p>
+                <p> Don&apos;t have an account? <span className='text-blue-600'><Link to="/signup">Sign U</Link>p</span></p>
             </div>
         </div>
         <ToastContainer/>
