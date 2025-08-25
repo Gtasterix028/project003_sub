@@ -32,7 +32,6 @@
 //     }
 //   }, [dispatch, UserId]);
 
-
 //   if (error?.status === 401) {
 //     Cookies.remove("token");
 //     navigate("/signin");
@@ -100,16 +99,12 @@
 
 // export default BuyCar;
 
-
-
-
-
 // /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import FilterCars from "../components/buyCar/FilterCars";
 import GridCarList from "../components/buyCar/GridCarList";
 import { useFilterCarQuery } from "../services/carAPI";
-import { useNavigate,useLocation  } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
@@ -122,8 +117,8 @@ import { FiFilter } from "react-icons/fi";
 
 const BuyCar = () => {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
-    const location = useLocation();
-    const { filterCar } = location.state ?? {};
+  const location = useLocation();
+  const { filterCar } = location.state ?? {};
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   const [urlState, setUrlState] = useState(null);
@@ -134,9 +129,9 @@ const BuyCar = () => {
 
   const emptyImage = "..\\..\\cars\\emptyfolder.png";
 
-  const { data, isLoading, error, refetch } = useFilterCarQuery({ 
-    urlState, 
-    pageNO: currentPage 
+  const { data, isLoading, error, refetch } = useFilterCarQuery({
+    urlState,
+    pageNO: currentPage,
   });
   console.log("isLoading:", isLoading);
 
@@ -154,9 +149,9 @@ const BuyCar = () => {
   }, [dispatch, UserId]);
 
   console.log(`API response:`, data);
-   useEffect(()=>{
-    if(filterCar) setUrlState(filterCar);
-  },[]);
+  useEffect(() => {
+    if (filterCar) setUrlState(filterCar);
+  }, [filterCar]);
 
   // Update API whenever filters change
   useEffect(() => {
@@ -179,7 +174,7 @@ const BuyCar = () => {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
@@ -192,50 +187,50 @@ const BuyCar = () => {
         for (let i = 1; i <= 3; i++) {
           pages.push(i);
         }
-        pages.push('...');
+        pages.push("...");
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
         // Show first page + ellipsis + last 3 pages
         pages.push(1);
-        pages.push('...');
+        pages.push("...");
         for (let i = totalPages - 2; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
         // Show first page + ellipsis + current page + ellipsis + last page
         pages.push(1);
-        pages.push('...');
+        pages.push("...");
         pages.push(currentPage);
-        pages.push('...');
+        pages.push("...");
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
   const handlePageChange = (page) => {
-    if (page !== '...' && page >= 1 && page <= totalPages) {
+    if (page !== "..." && page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       // Scroll to top when page changes
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   // Sort cars based on user selection
   const sortCars = (cars) => {
     if (!cars || !Array.isArray(cars)) return [];
-    
+
     const sortedCars = [...cars];
-    
+
     switch (sortBy) {
-      case 'price_low_high':
+      case "price_low_high":
         return sortedCars.sort((a, b) => (a.price || 0) - (b.price || 0));
-      case 'price_high_low':
+      case "price_high_low":
         return sortedCars.sort((a, b) => (b.price || 0) - (a.price || 0));
-      case 'year_newest':
+      case "year_newest":
         return sortedCars.sort((a, b) => (b.year || 0) - (a.year || 0));
-      case 'year_oldest':
+      case "year_oldest":
         return sortedCars.sort((a, b) => (a.year || 0) - (b.year || 0));
       default:
         return sortedCars;
@@ -274,14 +269,17 @@ const BuyCar = () => {
           <span className="mx-2 ">&gt;</span>
           <span className="text-orange-500 font-semibold">Buy Cars</span>
         </div>
-        <hr/>
-        <h1 className="w-full mt-2 text-2xl md:text-2xl font-bold mb-2 text-gray-900">Explore Our Exclusive Collection Of Premium Cars</h1>
+        <hr />
+        <h1 className="w-full mt-2 text-2xl md:text-2xl font-bold mb-2 text-gray-900">
+          Explore Our Exclusive Collection Of Premium Cars
+        </h1>
         <p className=" text-gray-400 text-sm md:text-base w-full">
-          Lorem Ipsum Dolor Sit Amet Consectetur. Ipsum Consectetur Vestibulum Tellus Viverra Id Ut Sit In Vestibulum Tellus Viverra Id Ut Sit In Vestibulum Tellus Viverra Id Ut Sit In.
+          Lorem Ipsum Dolor Sit Amet Consectetur. Ipsum Consectetur Vestibulum
+          Tellus Viverra Id Ut Sit In Vestibulum Tellus Viverra Id Ut Sit In
+          Vestibulum Tellus Viverra Id Ut Sit In.
         </p>
       </div>
       <div className="container mx-auto px-4">
-
         {/* Filter buttons row */}
         <div className="flex flex-wrap items-center justify-between mt-4">
           {/* Left: dropdowns */}
@@ -312,36 +310,38 @@ const BuyCar = () => {
 
           {/* Right: results text */}
           <span className="text-sm text-gray-500">
-            Showing {startIndex + 1} - {Math.min(endIndex, totalCars)} of {totalCars} results
+            Showing {startIndex + 1} - {Math.min(endIndex, totalCars)} of{" "}
+            {totalCars} results
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 lg:gap-6    ">
-          
-      {/* Mobile filter button */}
-      <div className="block md:hidden mb-4">
-        <div className="flex justify-end">
-        <button
-          onClick={() => setShowMobileFilter((prev) => !prev)}
-          className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600"
-        >
-          <FiFilter className="text-lg " />
-          Filters
-        </button>
-        </div>
+          {/* Mobile filter button */}
+          <div className="block md:hidden mb-4">
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowMobileFilter((prev) => !prev)}
+                className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600"
+              >
+                <FiFilter className="text-lg " />
+                Filters
+              </button>
+            </div>
 
-        {/* Mobile filter dropdown */}
-        <div
-          className={`overflow-hidden transition-all duration-300 ${
-            showMobileFilter ? "max-h-[1000px] mt-3" : "max-h-0"
-          }`}
-        >
-          <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-            <FilterCars setUrlState={setUrlState} onFilterChange={refetch} />
+            {/* Mobile filter dropdown */}
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                showMobileFilter ? "max-h-[1000px] mt-3" : "max-h-0"
+              }`}
+            >
+              <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                <FilterCars
+                  setUrlState={setUrlState}
+                  onFilterChange={refetch}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-        
 
           <div className="hidden md:block md:col-span-1 lg:col-span-1 w-full max-w-[520px] h-full">
             <div className="sticky top-0 flex flex-col">
@@ -359,9 +359,13 @@ const BuyCar = () => {
                     alt="no data"
                   />
                 </div>
-                <h3 className="text-2xl font-semibold text-gray-700 mb-2">No Cars Found</h3>
-                <p className="text-gray-500 mb-4">Try adjusting your filters or check back later.</p>
-                <button 
+                <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+                  No Cars Found
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  Try adjusting your filters or check back later.
+                </p>
+                <button
                   onClick={() => {
                     setUrlState(null);
                     setCurrentPage(1);
@@ -372,12 +376,14 @@ const BuyCar = () => {
                 </button>
               </div>
             ) : (
-              <GridCarList data={{...data, list: sortedCars}} error={error} refetch={refetch} isLoading={isLoading} />
+              <GridCarList
+                data={{ ...data, list: sortedCars }}
+                error={error}
+                refetch={refetch}
+                isLoading={isLoading}
+              />
             )}
           </div>
- 
-
-
         </div>
 
         {/* Pagination Controls */}
@@ -390,8 +396,8 @@ const BuyCar = () => {
                 disabled={currentPage === 1}
                 className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${
                   currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500"
                 }`}
               >
                 &lt;
@@ -404,12 +410,12 @@ const BuyCar = () => {
                   onClick={() => handlePageChange(page)}
                   className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${
                     page === currentPage
-                      ? 'bg-orange-500 text-white border-orange-500'
-                      : page === '...'
-                      ? 'bg-white text-gray-500 cursor-default'
-                      : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                      ? "bg-orange-500 text-white border-orange-500"
+                      : page === "..."
+                      ? "bg-white text-gray-500 cursor-default"
+                      : "bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500"
                   }`}
-                  disabled={page === '...'}
+                  disabled={page === "..."}
                 >
                   {page}
                 </button>
@@ -421,8 +427,8 @@ const BuyCar = () => {
                 disabled={currentPage === totalPages}
                 className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${
                   currentPage === totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500"
                 }`}
               >
                 &gt;
@@ -436,6 +442,3 @@ const BuyCar = () => {
 };
 
 export default BuyCar;
-
-
-

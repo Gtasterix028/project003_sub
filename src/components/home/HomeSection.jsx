@@ -1,7 +1,7 @@
 // import React from "react";
 import bmw from "../../assets/cars/bmw/bmw.png";
-import LoadingScreen from "../LoadingScreen";
-// import SplashScreen from "../LoadingScreen";
+// import LoadingScreen from "../LoadingScreen";
+import SplashScreen from "../LoadingScreen";
 import { useState, useEffect } from "react";
 
 const HomeSection = () => {
@@ -14,7 +14,7 @@ const HomeSection = () => {
   return (
     <>
       {showSplash ? (
-        <LoadingScreen />
+        <SplashScreen />
       ) : (
         <div
           className="relative w-full min-h-[500px] md:min-h-[600px] lg:min-h-[722px] bg-cover bg-center"

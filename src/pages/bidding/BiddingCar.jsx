@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
-import { Client } from '@stomp/stompjs';
+import { useEffect, useState } from "react";
+import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
-import { Button, Input } from '@material-tailwind/react';
+import { Button, Input } from "@material-tailwind/react";
 
 const BiddingCar = () => {
   const [bids, setBids] = useState([]);
@@ -13,7 +13,9 @@ const BiddingCar = () => {
   const [isConnected, setIsConnected] = useState(false); // New state variable
 
   useEffect(() => {
-    const socket = new SockJS(' https://becar.up.railway.app/Aucbidding');
+    const socket = new SockJS(
+      "https://caryanamindia.prodchunca.in.net/Aucbidding"
+    );
     const stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {
@@ -22,19 +24,19 @@ const BiddingCar = () => {
       onConnect: () => {
         // console.log('Connected');
         setIsConnected(true); // Update connection status
-        stompClient.subscribe('/topic/bids', (message) => {
+        stompClient.subscribe("/topic/bids", (message) => {
           const bid = JSON.parse(message.body);
           setBids((prevBids) => [...prevBids, bid]);
         });
-        stompClient.subscribe('/topic/topThreeBids', (message) => {
+        stompClient.subscribe("/topic/topThreeBids", (message) => {
           const topBids = JSON.parse(message.body);
           setTopThreeBids(topBids);
         });
         getTopThreeBids(stompClient); // Fetch top three bids when connected
       },
       onStompError: (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
+        console.error("Broker reported error: " + frame.headers["message"]);
+        console.error("Additional details: " + frame.body);
       },
     });
 
@@ -56,19 +58,22 @@ const BiddingCar = () => {
     };
 
     if (client) {
-      client.publish({
-        destination: '/app/placeBid',
-        body: JSON.stringify(bid),
-      }, (error, response) => {
-        if (error) {
-          console.error('Error placing bid:', error);
-        } else {
-          // console.log('Bid placed successfully:', response);
-          getTopThreeBids(client);
+      client.publish(
+        {
+          destination: "/app/placeBid",
+          body: JSON.stringify(bid),
+        },
+        (error, response) => {
+          if (error) {
+            console.error("Error placing bid:", error);
+          } else {
+            // console.log('Bid placed successfully:', response);
+            getTopThreeBids(client);
+          }
         }
-      });
+      );
     } else {
-      console.error('Stomp client is not initialized.');
+      console.error("Stomp client is not initialized.");
     }
   };
 
@@ -78,18 +83,18 @@ const BiddingCar = () => {
     };
     if (stompClient) {
       stompClient.publish({
-        destination: '/app/topThreeBids',
+        destination: "/app/topThreeBids",
         body: JSON.stringify(bidRequest),
       });
     } else {
-      console.error('Stomp client is not initialized.');
+      console.error("Stomp client is not initialized.");
     }
   };
 
   // console.log("topThreeBids", topThreeBids);
 
   return (
-    <div className='p-5'>
+    <div className="p-5">
       <h1>Auction Bidding System</h1>
       <div>
         <Input
@@ -98,25 +103,31 @@ const BiddingCar = () => {
           value={bidAmount}
           onChange={(e) => setBidAmount(Number(e.target.value))}
         />
-        <Input 
+        <Input
           type="number"
           placeholder="Car ID"
           value={bidCarId}
           onChange={(e) => setBidCarId(Number(e.target.value))}
         />
         <Button onClick={placeBid}>Place Bid</Button>
-        <Button onClick={() => getTopThreeBids(client)}>Get Top Three Bids</Button>
+        <Button onClick={() => getTopThreeBids(client)}>
+          Get Top Three Bids
+        </Button>
       </div>
       <h2>All Bids</h2>
       <ul>
         {bids.map((bid, index) => (
-          <li key={index}>{`User ${bid.userId} bid ${bid.amount} on car ${bid.bidCarId}`}</li>
+          <li
+            key={index}
+          >{`User ${bid.userId} bid ${bid.amount} on car ${bid.bidCarId}`}</li>
         ))}
       </ul>
       <h2>Top Three Bids</h2>
       <ul>
         {topThreeBids.map((bid, index) => (
-          <li key={index}>{`User ${bid.userId} bid ${bid.amount} on car ${bid.bidCarId}`}</li>
+          <li
+            key={index}
+          >{`User ${bid.userId} bid ${bid.amount} on car ${bid.bidCarId}`}</li>
         ))}
       </ul>
     </div>
