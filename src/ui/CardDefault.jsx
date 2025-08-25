@@ -15,6 +15,7 @@ import {
   useCarFavoriteAddRemoveQuery,
 } from "../services/carAPI";
 import { useGetDealerQuery } from "../services/dealerAPI";
+// import { useGetCarIdTypeQuery } from "../services/carAPI";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +26,8 @@ import TransmissionIcon from "@mui/icons-material/Settings"; // Example icon for
 import { FaArrowRight } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import CheckCircle from "@mui/icons-material/CheckCircle";
+import { useGetCoverImgQuery } from "../services/carAPI";
+import { useGetCarImageByIdQuery } from "../services/carAPI";
 
 function RatedIcon() {
   return (
@@ -149,34 +152,103 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
     return `${km.toLocaleString()} Kms`;
   };
 
+  //////////////////////////////////////////
+
+  const carId = data?.carId;
+  const { data: coverImgData } = useGetCoverImgQuery(
+    { carId },
+    { skip: !carId }
+  );
+
+  // const coverImageUrl =
+  //   coverImgData &&
+  //   // coverImgData.documentLink &&
+  //   coverImgData.documentType === "coverImage"
+  //     ? coverImgData.documentLink
+  //     : "/public/cars/no-image-available.png";
+
+  // const coverImageEntry = Array.isArray(coverImgData)
+  //   ? coverImgData.find((doc) => doc.documentType === "coverImage")
+  //   : null;
+
+  // const coverImageUrl = coverImageEntry?.documentLink
+  //   ? coverImageEntry.documentLink
+  //   : "/public/cars/no-image-available.png";
+
+  const coverImage = Array.isArray(coverImgData)
+    ? coverImgData.documentLink.find((doc) => doc.documentType === "image")
+    : null;
+
+  const coverImageUrl = coverImage?.documentLink
+    ? coverImage.documentLink
+    : "/public/cars/no-image-available.png";
+
+  console.log(
+    "cover image data",
+    coverImgData,
+    "coverImage",
+    coverImage,
+    "cover image url",
+    coverImageUrl
+  );
+
+  // const { carData } = useGetCarImageByIdQuery(data.Carid);
+  // const imgData = [
+  //   carData.object.filter((item) => item.documentType === "coverImage"),
+  // ];
+  // const coverImageUrl = imgData[0].documentType;
+
+  ///////////////////////////// useGetCoverImageQuery ////////////////////////////
+
+  // const { data: carData } = useGetCoverImgQuery({ carId: data.carId });
+  // const coverImageUrl =
+  //   carData && carData.length > 0
+  //     ? carData.documentLink
+  //     : "/public/cars/no-image-available.png";
+
+  ////////////////////////////////////////////
+  // const coverImageUrl =
+  //   cData && cData.length > 0
+  //     ? cData[0].url // Or however your data is structured
+  //     : "/public/cars/no-image-available.png";
+
+  // const coverImageUrl = coverImageUrl.length > [0] ? useGetDocumentsQuery() : "/public/cars/no-image-available.png";
+
+  // const { data1  } = useGetDocumentsQuery({
+  //   userId: Carid,
+  //   documentType: "Cover type",
+  // });
+
+  // const coverImageUrl =
+  //   data1?.object?.[0]?.documentPath || // adjust based on your actual API response
+  //   data1.images?.[0] ||
+  //   data1.carImage ||
+  // "/public/cars/no-image-available.png";
+
   return (
     // <div
-    //   className="w-full bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all 
+    //   className="w-full bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all
     //   flex items-center p-4 mb-4 max-w-4xl mx-auto md:flex-row
     //   flex-col sm:flex-row"
     // >
     <div
-  className="w-full bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all 
+      className="w-full bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all 
   flex flex-col md:flex-row items-center p-4 mb-4 max-w-4xl mx-auto"
->
+    >
       {/* Car Image */}
       {/* <div
         className=" w-full h-48 sm:w-64 sm:h-48  md:w-64 md:h-48 
       rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center
     "
       > */}
-       <div
-    className="w-full h-48 md:w-64 md:h-48 
+      <div
+        className="w-full h-48 md:w-64 md:h-48 
     rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center"
-  >
+      >
         <Link to={`/carlist/cardetails/${data.carId}`}>
           <img
-            src={
-              data.images && data.images.length > 0
-                ? data.images[0]
-                : data.carImage || "/public/cars/no-image-available.png"
-            }
-            alt={combinedText}
+            src={coverImageUrl} // ✅ Updated image source using API
+            alt={`${data.year || ""} ${data.brand || ""} ${data.model || ""}`}
             className="object-cover w-full h-full"
             onError={(e) => {
               e.target.src = "/public/cars/no-image-available.png";
@@ -194,8 +266,10 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
         <div className="font-semibold text-lg text-gray-900 truncate">
           {combinedText}
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1
-        text-gray-500 text-sm mt-1 mb-2">
+        <div
+          className="flex flex-wrap gap-x-4 gap-y-1
+        text-gray-500 text-sm mt-1 mb-2"
+        >
           <span className="flex items-center">
             <DriveEtaIcon
               className="text-green-600 mr-1"
@@ -229,15 +303,17 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
           {formatPrice(data.price)}
         </div>
         <Link to={`/carlist/cardetails/${data.carId}`}>
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition flex items-center text-sm font-semibold w-full sm:w-auto justify-center
-        ">
+          <button
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition flex items-center text-sm font-semibold w-full sm:w-auto justify-center
+        "
+          >
             View Details <FaArrowRight className="ml-2" />
           </button>
         </Link>
       </div>
       {/* Seller Info - Simplified */}
       {/* <div className="flex flex-col items-center justify-center w-full sm:w-32 sm:border-l sm:pl-4 min-h-[100px]"> */}
-          <div className="flex flex-col items-center justify-center w-full md:w-32 md:border-l md:pl-4 min-h-[100px]">
+      <div className="flex flex-col items-center justify-center w-full md:w-32 md:border-l md:pl-4 min-h-[100px]">
         {dealerLoading ? (
           <div className="flex flex-col items-center">
             <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse mb-2"></div>

@@ -183,6 +183,19 @@ export const carApi = apiSlice.injectEndpoints({
       invalidatesTags: ["CAR"],
     }),
 
+    // http://localhost:8086/uploadFile/getDocuments?userId=1104&DocumentType=Cover type
+    // http://localhost:8086/uploadFile/getByCarID?carId=12
+
+  getCoverImg: builder.query({
+  query: ({ carId }) => ({
+    url: `/uploadFile/getByCarID`,
+    method: "GET",
+    params: {
+      carId
+    },
+  }),
+}),
+
     // getCarImageById : builder.query({
     //   query : ({carId}) => ({
     //     url : `/photo/get/${carId}`,
@@ -322,5 +335,7 @@ export const {
   useCarStatusActiveQuery,
   useCarCountByCartypeQuery,
   useCarsByCartypeQuery,
-  useGetRecentCarQuery
+  useGetRecentCarQuery,
+  
+  useGetCoverImgQuery
 } = carApi;
