@@ -6,10 +6,10 @@ import { useCarRegisterPremiumMutation } from "../../services/carAPI";
 import { useNavigate, useParams } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import {
-  useGetOnlyBrandsQuery,
-  useGetVariantsQuery,
-  useGetSubVariantsQuery,
-} from "../../services/brandAPI";
+  useGetOnlyPremiumBrandsQuery,
+  useGetPremiumVariantsQuery,
+  useGetPremiumSubVariantsQuery,
+} from "../../services/premiumBrandApi";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -51,7 +51,7 @@ const cityOptions = {
 };
 
 export default function AddPremiumCarForm() {
-  const { data: brandData } = useGetOnlyBrandsQuery();
+  const { data: brandData } = useGetOnlyPremiumBrandsQuery();
   const brands = brandData?.list.map((item) => item.brand) || [];
   const { data: colorData } = useGetAllColorQuery();
   const colors = colorData?.list.map((item) => item.name) || [];
@@ -63,11 +63,11 @@ export default function AddPremiumCarForm() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const { data: variantData } = useGetVariantsQuery(selectedBrand, {
+  const { data: variantData } = useGetPremiumVariantsQuery(selectedBrand, {
     skip: !selectedBrand,
   });
   // console.log(variantData);
-  const { data: subVariantData } = useGetSubVariantsQuery(
+  const { data: subVariantData } = useGetPremiumSubVariantsQuery(
     { brand: selectedBrand, variant: selectedModel },
     {
       skip: !selectedBrand || !selectedModel,
@@ -79,9 +79,9 @@ export default function AddPremiumCarForm() {
       (color) =>
         color && color.toLowerCase().includes((inputValue || "").toLowerCase())
     ) // Ensure both color and inputValue are strings
-    .sort(); 
+    .sort();
   const { carType } = useParams();
-  const [carRegister] = useCarRegisterPremiumMutation({carType});
+  const [carRegister] = useCarRegisterPremiumMutation({ carType });
   //  const [mult, setMult] = React.useState([]);
   const [formData, setFormData] = useState({
     //features
@@ -247,12 +247,11 @@ export default function AddPremiumCarForm() {
 
   const handleColorChange = (event, newValue) => {
     const color = newValue;
-    
+
     setInputValue(color);
     setFormData({
       ...formData,
       color,
-      
     });
   };
 

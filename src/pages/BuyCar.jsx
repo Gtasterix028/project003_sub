@@ -151,7 +151,7 @@ const BuyCar = () => {
   console.log(`API response:`, data);
   useEffect(() => {
     if (filterCar) setUrlState(filterCar);
-  }, []);
+  }, [filterCar]);
 
   // Update API whenever filters change
   useEffect(() => {

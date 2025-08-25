@@ -15,19 +15,16 @@ import {
   useCarFavoriteAddRemoveQuery,
 } from "../services/carAPI";
 import { useGetDealerQuery } from "../services/dealerAPI";
-// import { useGetCarIdTypeQuery } from "../services/carAPI";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { addFavoriteCar, removeFavoriteCar } from "../pages/favoritesSlice";
-import DriveEtaIcon from "@mui/icons-material/DriveEta"; // Example icon for KM
-import LocalGasStationIcon from "@mui/icons-material/LocalGasStation"; // Example icon for fuel type
-import TransmissionIcon from "@mui/icons-material/Settings"; // Example icon for transmission (you can choose a better one)
+import DriveEtaIcon from "@mui/icons-material/DriveEta";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
+import TransmissionIcon from "@mui/icons-material/Settings";
 import { FaArrowRight } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import CheckCircle from "@mui/icons-material/CheckCircle";
-import { useGetCoverImgQuery } from "../services/carAPI";
-import { useGetCarImageByIdQuery } from "../services/carAPI";
 
 function RatedIcon() {
   return (
@@ -70,16 +67,12 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
   const token = Cookies.get("token");
   let jwtDecodes;
 
-  // console.log("in cardefault ....."+data)
   if (token) {
     jwtDecodes = jwtDecode(token);
   }
   const UserId = jwtDecodes?.userId;
   const userRole = token ? jwtDecodes?.authorities[0] : null;
-  const data2 = {
-    carId: Carid,
-    userId: UserId,
-  };
+  const data2 = { carId: Carid, userId: UserId };
   const carid = data2.carId;
   const useid = data2.userId;
 
@@ -89,7 +82,6 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
     refetch: refetchFavCarData,
   } = useCarFavoriteAddRemoveQuery({ carid, useid });
 
-  // Fetch dealer information if dealerId is available
   const { data: dealerData, isLoading: dealerLoading } = useGetDealerQuery(
     { id: data.dealerId },
     { skip: !data.dealerId }
@@ -98,33 +90,26 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
   const [CarremoveFavorite] = useCarremoveFavoriteMutation();
 
   const handleFavoriteToggle = async () => {
-    const data2 = {
-      carId: Carid,
-      userId: UserId,
-    };
+    const data2 = { carId: Carid, userId: UserId };
     if (favoriteCars?.find((favCar) => favCar.carId === data.carId)) {
       dispatch(removeFavoriteCar(data));
-      const res = await CarremoveFavorite({
-        saveCarId: favData?.object?.saveCarId,
-      });
+      await CarremoveFavorite({ saveCarId: favData?.object?.saveCarId });
       refetchFavCarData();
     } else {
-      const res = await favoriteCar(data2);
+      await favoriteCar(data2);
       dispatch(addFavoriteCar(data2));
-      // refetchFavCarData()
     }
   };
 
-  // Seller info from API data - simplified to show only basic info
   const seller = {
     name:
       dealerData?.dealerName || data.dealerName || data.sellerName || "Seller",
-    ownership: data.ownerType || data.ownership || "First Owner", // Ownership status
+    ownership: data.ownerType || data.ownership || "First Owner",
     profileImg:
       dealerData?.profileImage ||
       data.dealerProfileImage ||
       data.sellerImg ||
-      "/public/logos/dummy-profile-pic.jpg",
+      "/logos/dummy-profile-pic.jpg",
   };
 
   const combinedText = `${data.year || ""} ${data.brand || ""} ${
@@ -135,7 +120,6 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
       ? combinedText.substring(0, 22) + "..."
       : combinedText;
 
-  // Format price with proper currency
   const formatPrice = (price) => {
     if (!price) return "Price not available";
     return new Intl.NumberFormat("en-IN", {
@@ -146,116 +130,38 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
     }).format(price);
   };
 
-  // Format kilometers
   const formatKm = (km) => {
     if (!km) return "KM not available";
     return `${km.toLocaleString()} Kms`;
   };
 
-  //////////////////////////////////////////
-
-  const carId = data?.carId;
-  const { data: coverImgData } = useGetCoverImgQuery(
-    { carId },
-    { skip: !carId }
+  // 🔥 FIX: Safe states for images
+  const [carImg, setCarImg] = useState(
+    data.images?.[0] || data.carImage || "/wrong-path/no-car.png"
   );
+  console.log(data, data.images);
 
-  // const coverImageUrl =
-  //   coverImgData &&
-  //   // coverImgData.documentLink &&
-  //   coverImgData.documentType === "coverImage"
-  //     ? coverImgData.documentLink
-  //     : "/public/cars/no-image-available.png";
-
-  // const coverImageEntry = Array.isArray(coverImgData)
-  //   ? coverImgData.find((doc) => doc.documentType === "coverImage")
-  //   : null;
-
-  // const coverImageUrl = coverImageEntry?.documentLink
-  //   ? coverImageEntry.documentLink
-  //   : "/public/cars/no-image-available.png";
-
-  const coverImage = Array.isArray(coverImgData)
-    ? coverImgData.documentLink.find((doc) => doc.documentType === "image")
-    : null;
-
-  const coverImageUrl = coverImage?.documentLink
-    ? coverImage.documentLink
-    : "/public/cars/no-image-available.png";
-
-  console.log(
-    "cover image data",
-    coverImgData,
-    "coverImage",
-    coverImage,
-    "cover image url",
-    coverImageUrl
+  const [sellerImg, setSellerImg] = useState(
+    seller.profileImg || "/logos/dummy-profile-pic.jpg"
   );
-
-  // const { carData } = useGetCarImageByIdQuery(data.Carid);
-  // const imgData = [
-  //   carData.object.filter((item) => item.documentType === "coverImage"),
-  // ];
-  // const coverImageUrl = imgData[0].documentType;
-
-  ///////////////////////////// useGetCoverImageQuery ////////////////////////////
-
-  // const { data: carData } = useGetCoverImgQuery({ carId: data.carId });
-  // const coverImageUrl =
-  //   carData && carData.length > 0
-  //     ? carData.documentLink
-  //     : "/public/cars/no-image-available.png";
-
-  ////////////////////////////////////////////
-  // const coverImageUrl =
-  //   cData && cData.length > 0
-  //     ? cData[0].url // Or however your data is structured
-  //     : "/public/cars/no-image-available.png";
-
-  // const coverImageUrl = coverImageUrl.length > [0] ? useGetDocumentsQuery() : "/public/cars/no-image-available.png";
-
-  // const { data1  } = useGetDocumentsQuery({
-  //   userId: Carid,
-  //   documentType: "Cover type",
-  // });
-
-  // const coverImageUrl =
-  //   data1?.object?.[0]?.documentPath || // adjust based on your actual API response
-  //   data1.images?.[0] ||
-  //   data1.carImage ||
-  // "/public/cars/no-image-available.png";
 
   return (
-    // <div
-    //   className="w-full bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all
-    //   flex items-center p-4 mb-4 max-w-4xl mx-auto md:flex-row
-    //   flex-col sm:flex-row"
-    // >
     <div
       className="w-full bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all 
-  flex flex-col md:flex-row items-center p-4 mb-4 max-w-4xl mx-auto"
+      flex flex-col md:flex-row items-center p-4 mb-4 max-w-4xl mx-auto"
     >
       {/* Car Image */}
-      {/* <div
-        className=" w-full h-48 sm:w-64 sm:h-48  md:w-64 md:h-48 
-      rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center
-    "
-      > */}
-      <div
-        className="w-full h-48 md:w-64 md:h-48 
-    rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center"
-      >
+      <div className="w-full h-48 md:w-64 md:h-48 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
         <Link to={`/carlist/cardetails/${data.carId}`}>
           <img
-            src={coverImageUrl} // ✅ Updated image source using API
-            alt={`${data.year || ""} ${data.brand || ""} ${data.model || ""}`}
+            src={carImg}
+            alt={combinedText}
             className="object-cover w-full h-full"
-            onError={(e) => {
-              e.target.src = "/public/cars/no-image-available.png";
-            }}
+            onError={() => setCarImg("/cars/no-image-available.png")}
           />
         </Link>
       </div>
+
       {/* Car Info */}
       <div className="flex-1 px-0 md:px-6 flex flex-col justify-between h-full min-w-0 mt-3 md:mt-0">
         <div className="flex items-center mb-1">
@@ -266,10 +172,7 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
         <div className="font-semibold text-lg text-gray-900 truncate">
           {combinedText}
         </div>
-        <div
-          className="flex flex-wrap gap-x-4 gap-y-1
-        text-gray-500 text-sm mt-1 mb-2"
-        >
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500 text-sm mt-1 mb-2">
           <span className="flex items-center">
             <DriveEtaIcon
               className="text-green-600 mr-1"
@@ -303,16 +206,13 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
           {formatPrice(data.price)}
         </div>
         <Link to={`/carlist/cardetails/${data.carId}`}>
-          <button
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition flex items-center text-sm font-semibold w-full sm:w-auto justify-center
-        "
-          >
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition flex items-center text-sm font-semibold w-full sm:w-auto justify-center">
             View Details <FaArrowRight className="ml-2" />
           </button>
         </Link>
       </div>
-      {/* Seller Info - Simplified */}
-      {/* <div className="flex flex-col items-center justify-center w-full sm:w-32 sm:border-l sm:pl-4 min-h-[100px]"> */}
+
+      {/* Seller Info */}
       <div className="flex flex-col items-center justify-center w-full md:w-32 md:border-l md:pl-4 min-h-[100px]">
         {dealerLoading ? (
           <div className="flex flex-col items-center">
@@ -323,14 +223,12 @@ export function CardDefault({ data, Carid, refetch, isLoading }) {
         ) : (
           <>
             <img
-              src={seller.profileImg}
+              src={sellerImg}
               alt={seller.name || "Seller"}
               className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 mb-2"
-              onError={(e) => {
-                e.target.src = "/public/logos/dummy-profile-pic.jpg";
-              }}
+              onError={() => setSellerImg("/logos/dummy-profile-pic.jpg")}
             />
-            <div className="text-gray-900 font-semibold text-xs text-center truncate w-full  ">
+            <div className="text-gray-900 font-semibold text-xs text-center truncate w-full">
               {seller.name}
             </div>
             <div className="text-gray-500 text-xs text-center">
