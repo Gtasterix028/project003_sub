@@ -122,8 +122,8 @@ const FilterCars1 = ({ setUrlState }) => {
       model: "",
       fuelType: "",
       transmission: "",
-      MinPrice: 1500000, // Reset MinPrice
-      MaxPrice: 100000000, // Reset MaxPrice
+      // MinPrice: 1500000, // Reset MinPrice
+      // MaxPrice: 100000000, // Reset MaxPrice
     });
   };
 
