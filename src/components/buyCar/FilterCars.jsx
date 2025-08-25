@@ -518,13 +518,13 @@ const FilterCars = ({ setUrlState }) => {
       <div className="flex flex-col gap-2 mt-2">
         <Button type="submit" className="w-full bg-orange-500 text-white rounded-lg py-2 font-semibold">Search</Button>
         <Button type="button" onClick={resetForm} className="w-full bg-gray-200 text-gray-700 rounded-lg py-2 font-semibold">Reset</Button>
-        {/* <Button
+        <Button
           type="button"
           onClick={resetForm}  
           className="bg-orange-400 text-white rounded-lg px-4 py-2 font-semibold"
         >
           Clear Filters
-        </Button> */}
+        </Button>
 
       </div>
     </form>

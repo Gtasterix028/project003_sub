@@ -109,7 +109,7 @@ import { useEffect, useState } from "react";
 import FilterCars from "../components/buyCar/FilterCars";
 import GridCarList from "../components/buyCar/GridCarList";
 import { useFilterCarQuery } from "../services/carAPI";
-import { useNavigate,useLocation  } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
@@ -122,8 +122,8 @@ import { FiFilter } from "react-icons/fi";
 
 const BuyCar = () => {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
-    const location = useLocation();
-    const { filterCar } = location.state ?? {};
+  const location = useLocation();
+  const { filterCar } = location.state ?? {};
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   const [urlState, setUrlState] = useState(null);
@@ -138,9 +138,9 @@ const BuyCar = () => {
 
   const emptyImage = "..\\..\\cars\\emptyfolder.png";
 
-  const { data, isLoading, error, refetch } = useFilterCarQuery({ 
-    urlState, 
-    pageNO: currentPage 
+  const { data, isLoading, error, refetch } = useFilterCarQuery({
+    urlState,
+    pageNO: currentPage
   });
   console.log("isLoading:", isLoading);
 
@@ -158,9 +158,9 @@ const BuyCar = () => {
   }, [dispatch, UserId]);
 
   console.log(`API response:`, data);
-   useEffect(()=>{
-    if(filterCar) setUrlState(filterCar);
-  },[]);
+  useEffect(() => {
+    if (filterCar) setUrlState(filterCar);
+  }, []);
 
   // Update API whenever filters change
   useEffect(() => {
@@ -183,7 +183,7 @@ const BuyCar = () => {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
@@ -214,7 +214,7 @@ const BuyCar = () => {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -229,9 +229,9 @@ const BuyCar = () => {
   // Sort cars based on user selection
   const sortCars = (cars) => {
     if (!cars || !Array.isArray(cars)) return [];
-    
+
     const sortedCars = [...cars];
-    
+
     switch (sortBy) {
       case 'price_low_high':
         return sortedCars.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -278,7 +278,7 @@ const BuyCar = () => {
           <span className="mx-2 ">&gt;</span>
           <span className="text-orange-500 font-semibold">Buy Cars</span>
         </div>
-        <hr/>
+        <hr />
         <h1 className="w-full mt-2 text-2xl md:text-2xl font-bold mb-2 text-gray-900">Explore Our Exclusive Collection Of Premium Cars</h1>
         <p className=" text-gray-400 text-sm md:text-base w-full">
           Lorem Ipsum Dolor Sit Amet Consectetur. Ipsum Consectetur Vestibulum Tellus Viverra Id Ut Sit In Vestibulum Tellus Viverra Id Ut Sit In Vestibulum Tellus Viverra Id Ut Sit In.
@@ -321,31 +321,30 @@ const BuyCar = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 lg:gap-6    ">
-          
-      {/* Mobile filter button */}
-      <div className="block md:hidden mb-4">
-        <div className="flex justify-end">
-        <button
-          onClick={() => setShowMobileFilter((prev) => !prev)}
-          className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600"
-        >
-          <FiFilter className="text-lg " />
-          Filters
-        </button>
-        </div>
 
-        {/* Mobile filter dropdown */}
-        <div
-          className={`overflow-hidden transition-all duration-300 ${
-            showMobileFilter ? "max-h-[1000px] mt-3" : "max-h-0"
-          }`}
-        >
-          <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-            <FilterCars setUrlState={setUrlState} onFilterChange={refetch} />
+          {/* Mobile filter button */}
+          <div className="block md:hidden mb-4">
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowMobileFilter((prev) => !prev)}
+                className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600"
+              >
+                <FiFilter className="text-lg " />
+                Filters
+              </button>
+            </div>
+
+            {/* Mobile filter dropdown */}
+            <div
+              className={`overflow-hidden transition-all duration-300 ${showMobileFilter ? "max-h-[1000px] mt-3" : "max-h-0"
+                }`}
+            >
+              <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                <FilterCars setUrlState={setUrlState} onFilterChange={refetch} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-        
+
 
           <div className="hidden md:block md:col-span-1 lg:col-span-1 w-full max-w-[520px] h-full">
             <div className="sticky top-0 flex flex-col">
@@ -366,31 +365,21 @@ const BuyCar = () => {
                 <h3 className="text-2xl font-semibold text-gray-700 mb-2">No Cars Found</h3>
                 <p className="text-gray-500 mb-4">Try adjusting your filters or check back later.</p>
                 <button
-  onClick={() => {
-    if (resetFiltersFn) resetFiltersFn();
-    setUrlState(null);
-    setCurrentPage(1);
-  }}
-  className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors mt-4"
->
-  Clear Filters
-</button>
-                {/* <button 
                   onClick={() => {
+                    if (resetFiltersFn) resetFiltersFn();
                     setUrlState(null);
                     setCurrentPage(1);
                   }}
-                  className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+                  className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors mt-4"
                 >
                   Clear Filters
                 </button>
-                 */}
               </div>
             ) : (
-              <GridCarList data={{...data, list: sortedCars}} error={error} refetch={refetch} isLoading={isLoading} />
+              <GridCarList data={{ ...data, list: sortedCars }} error={error} refetch={refetch} isLoading={isLoading} />
             )}
           </div>
- 
+
 
 
         </div>
@@ -403,11 +392,10 @@ const BuyCar = () => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${
-                  currentPage === 1
+                className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${currentPage === 1
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
-                }`}
+                  }`}
               >
                 &lt;
               </button>
@@ -417,13 +405,12 @@ const BuyCar = () => {
                 <button
                   key={index}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${
-                    page === currentPage
+                  className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${page === currentPage
                       ? 'bg-orange-500 text-white border-orange-500'
                       : page === '...'
-                      ? 'bg-white text-gray-500 cursor-default'
-                      : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
-                  }`}
+                        ? 'bg-white text-gray-500 cursor-default'
+                        : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                    }`}
                   disabled={page === '...'}
                 >
                   {page}
@@ -434,11 +421,10 @@ const BuyCar = () => {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${
-                  currentPage === totalPages
+                className={`px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium transition-colors ${currentPage === totalPages
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-white text-gray-700 hover:bg-orange-500 hover:text-white hover:border-orange-500'
-                }`}
+                  }`}
               >
                 &gt;
               </button>
